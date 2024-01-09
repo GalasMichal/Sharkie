@@ -57,6 +57,16 @@ class World {
     }
 
     addToMap(mo){
-        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height)
+        if(mo.otherDirection){   // wir prüfen ob moveableobject andere richtung hat (ist true) wenn ja 
+            this.ctx.save(); // dann speichern wir aktuelle einstellungen von unseren context
+            this.ctx.translate(mo.width, 0);
+            this.ctx.scale(-1, 1);
+            mo.x = mo.x * -1;  // hie wir drehen die x koordinaten um weil es wird schon einmal durch scale -1 umgedreht
+        }
+        this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
+        if(mo.otherDirection){
+            mo.x = mo.x * -1;
+            this.ctx.restore();
+        }
     }
 }
