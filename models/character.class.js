@@ -160,6 +160,7 @@ class Character extends MoveableObject {
                     this.playAnimation(this.IMAGES_ATTACK_BUBBLE);
                     this.world.checkThrowObjects();
                     this.collectedBottles -= 5;
+                    
                     console.log('verfügbare flaschen :', this.collectedBottles);
                     
                     // Deaktiviere das Schießen für eine bestimmte Zeit
@@ -167,6 +168,7 @@ class Character extends MoveableObject {
                     setTimeout(() => {
                         this.canShoot = true;
                     },1000);
+                    this.world.statusBarBottle.setPercentage(this.collectedBottles);
                 }else {
                     this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
                 }
@@ -197,7 +199,4 @@ class Character extends MoveableObject {
     }
 
 
-    jump() {
-
-    }
 }

@@ -20,10 +20,18 @@ class JellyFish extends MoveableObject {
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 4.png',
     ];
 
+    IMAGES_DANGER = [
+        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 1.png',
+        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 2.png',
+        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 3.png',
+        'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 4.png',
+    ]
+
     constructor() {
         super().loadImage('img/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png');
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_TRANSITION);
+        this.loadImages(this.IMAGES_DANGER);
         this.x = this.randomX; // random pos x
         this.y = this.randomY;  // random pos y
         this.speed = 6; // Geschwindigkeit der Bewegung
@@ -34,7 +42,7 @@ class JellyFish extends MoveableObject {
     };
 
     animate() {
-        setInterval(() => {
+       let moveIntervall = setInterval(() => {
             this.playAnimation(this.IMAGES_SWIM);
             if (this.y >= this.maxY) {
                 this.direction = -1; // Ändere die Richtung zu nach oben, wenn die Obergrenze erreicht ist
@@ -49,6 +57,10 @@ class JellyFish extends MoveableObject {
             this.y += this.speed * this.direction; // Bewege die Jellyfish entsprechend der Richtung und Geschwindigkeit
         }, 200);
     }
+
+        if () {
+            
+        }
 
     moveLeft() {
         setInterval(() => {

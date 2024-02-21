@@ -1,5 +1,6 @@
 class Level {
     enemies;
+    boss;
     corals;
     backgroundObjects;
     coins;
@@ -7,8 +8,9 @@ class Level {
     level_end_x = 4300;
     background_audio = new Audio('audio/backgroundMusik.mp3')
 
-    constructor(enemies, corals, backgroundObjects, coins, bottles){
+    constructor(enemies, boss, corals, backgroundObjects, coins, bottles){
         this.enemies = enemies;
+        this.boss = boss;
         this.corals = corals;
         this.backgroundObjects = backgroundObjects;
         this.coins = coins;

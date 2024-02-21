@@ -11,6 +11,8 @@ class World {
     statusBarBottle = new StatusBarBottle();
     Throwable_Object = [];
 
+
+
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -23,15 +25,16 @@ class World {
     run() {
         setInterval(() => {
             this.checkCollisions();
-           // this.checkThrowObjects();
         }, 200);
     }
 
     checkThrowObjects() {
         let bottle = new ThrowableObject(this.character.x + 150, this.character.y + 90);
         this.Throwable_Object.push(bottle);
-         
+
     };
+
+    
 
 
     checkCollisions() {
@@ -42,7 +45,16 @@ class World {
                 let index = this.level.enemies.indexOf(enemy);
                 console.log('Collision with Character energy', this.character.energy, 'is collided with', enemy, 'index is:', index);
                 return enemy, index;
-            }
+            };
+            this.Throwable_Object.forEach((thrownObject) => {
+                if (thrownObject.isColliding(enemy)) {
+                    let indexOfEnemy = this.level.enemies.indexOf(enemy);
+                    let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
+                    this.enemyAttacked(indexOfBubble);
+                    console.log('enemy hitted with index nr:', index);
+                    return indexOfEnemy;
+                }
+            });
         });
 
         this.level.coins.forEach((coin) => {
@@ -64,6 +76,8 @@ class World {
                 console.log('Bottle collected', this.character.collectedBottles, 'index of bottle is', indexOfBottle);
             }
         });
+
+
     }
 
     setWorld() {
@@ -84,6 +98,7 @@ class World {
 
         this.addObjectsToMap(this.level.corals);
         this.addObjectsToMap(this.level.enemies);
+        this.addObjectsToMap(this.level.boss);
         this.addObjectsToMap(this.Throwable_Object);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
@@ -109,7 +124,7 @@ class World {
         }
 
         mo.draw(this.ctx);
-       // mo.drawFrame(this.ctx); ENABLE IT IF YOU WANT TO SEE HIT BOX FRAMES
+        // mo.drawFrame(this.ctx); ENABLE IT IF YOU WANT TO SEE HIT BOX FRAMES
 
         if (mo.otherDirection) {
             this.flipImageBack(mo);
