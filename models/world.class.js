@@ -34,7 +34,9 @@ class World {
 
     };
 
-    
+    enemyAttacked(index) {
+        this.Throwable_Object.splice(index, 1);
+    }
 
 
     checkCollisions() {
@@ -51,8 +53,9 @@ class World {
                     let indexOfEnemy = this.level.enemies.indexOf(enemy);
                     let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
                     this.enemyAttacked(indexOfBubble);
-                    console.log('enemy hitted with index nr:', index);
-                    return indexOfEnemy;
+                    console.log('enemy hitted with index nr:', indexOfEnemy);
+                    enemy.changeAnimation();
+                    
                 }
             });
         });

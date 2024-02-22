@@ -5,6 +5,8 @@ class JellyFish extends MoveableObject {
     maxY = this.y + 100;
     minY = this.y - 100;
     speed = 0.5;
+    moveInterval;
+    
 
     IMAGES_SWIM = [
         'img/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png',
@@ -25,13 +27,21 @@ class JellyFish extends MoveableObject {
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 2.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 3.png',
         'img/2.Enemy/2 Jelly fish/Súper dangerous/Pink 4.png',
-    ]
+    ];
+
+    IMAGES_DEAD = [
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P1.png',
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P2.png',
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P3.png',
+        'img/2.Enemy/2 Jelly fish/Dead/Pink/P4.png',
+    ];
 
     constructor() {
         super().loadImage('img/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png');
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_TRANSITION);
         this.loadImages(this.IMAGES_DANGER);
+        this.loadImages(this.IMAGES_DEAD);
         this.x = this.randomX; // random pos x
         this.y = this.randomY;  // random pos y
         this.speed = 6; // Geschwindigkeit der Bewegung
@@ -42,30 +52,39 @@ class JellyFish extends MoveableObject {
     };
 
     animate() {
-       let moveIntervall = setInterval(() => {
+        this.moveInterval = setInterval(() => {
             this.playAnimation(this.IMAGES_SWIM);
             if (this.y >= this.maxY) {
                 this.direction = -1; // Ändere die Richtung zu nach oben, wenn die Obergrenze erreicht ist
                 setTimeout(() => {
                     this.moveLeft();
-                        
-            }, 200);
-                
+
+                }, 200);
+
             } else if (this.y <= this.minY) {
                 this.direction = 1; // Ändere die Richtung zu nach unten, wenn die Untergrenze erreicht ist
             }
             this.y += this.speed * this.direction; // Bewege die Jellyfish entsprechend der Richtung und Geschwindigkeit
         }, 200);
+
+
+
     }
 
-        if () {
-            
-        }
+    changeAnimation() {
+        clearInterval(this.moveInterval); // Stopp der aktuellen Bewegungsanimation
+        this.speed = 0
+        setInterval(() => {
+            this.playAnimation(this.IMAGES_DEAD);
+        }, 200)
+         // Ändern der Animation auf die "Todes"-Animation
+    }
+
 
     moveLeft() {
-        setInterval(() => {
+      setInterval(() => {
             this.x -= this.speed;
-        }, 800);  
+        }, 800);
     }
 }
 

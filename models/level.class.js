@@ -15,6 +15,6 @@ class Level {
         this.backgroundObjects = backgroundObjects;
         this.coins = coins;
         this.bottles = bottles;
-        this.background_audio.play();
+        //this.background_audio.play();
     }
 }

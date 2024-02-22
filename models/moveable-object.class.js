@@ -77,9 +77,7 @@ class MoveableObject extends DrawableObject {
         this.collectedBottles += 20;
     }
 
-    enemyAttacked(index) {
-        this.Throwable_Object.splice(index, 1);
-    }
+    
 
     isHurt() {
         let timepassed = new Date().getTime() - this.lastHit; // differenz in ms
