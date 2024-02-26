@@ -44,18 +44,15 @@ class World {
             if (this.character.isColliding(enemy)) {
                 this.character.hit();
                 this.statusBar.setPercentage(this.character.energy);
-                let index = this.level.enemies.indexOf(enemy);
-                console.log('Collision with Character energy', this.character.energy, 'is collided with', enemy, 'index is:', index);
-                return enemy, index;
+                this.character.damageType = enemy.damageType;
             };
+
             this.Throwable_Object.forEach((thrownObject) => {
                 if (thrownObject.isColliding(enemy)) {
-                    let indexOfEnemy = this.level.enemies.indexOf(enemy);
                     let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
                     this.enemyAttacked(indexOfBubble);
-                    console.log('enemy hitted with index nr:', indexOfEnemy);
                     enemy.changeAnimation();
-                    
+
                 }
             });
         });
@@ -66,7 +63,7 @@ class World {
                 this.statusBarCoin.setPercentage(this.character.collectedCoins);
                 let indexOfCoin = this.level.coins.indexOf(coin);
                 this.level.coins.splice(indexOfCoin, 1);
-                console.log('coin collected', this.character.collectedCoins, 'index of coin is', indexOfCoin);
+                // console.log('coin collected', this.character.collectedCoins, 'index of coin is', indexOfCoin);
             }
         });
 
@@ -76,7 +73,7 @@ class World {
                 this.statusBarBottle.setPercentage(this.character.collectedBottles);
                 let indexOfBottle = this.level.bottles.indexOf(bottle);
                 this.level.bottles.splice(indexOfBottle, 1);
-                console.log('Bottle collected', this.character.collectedBottles, 'index of bottle is', indexOfBottle);
+                //  console.log('Bottle collected', this.character.collectedBottles, 'index of bottle is', indexOfBottle);
             }
         });
 

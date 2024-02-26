@@ -6,7 +6,7 @@ class JellyFish extends MoveableObject {
     minY = this.y - 100;
     speed = 0.5;
     moveInterval;
-    
+    damageType = 'SHOCK';
 
     IMAGES_SWIM = [
         'img/2.Enemy/2 Jelly fish/Regular damage/Yellow 1.png',
@@ -45,15 +45,19 @@ class JellyFish extends MoveableObject {
         this.x = this.randomX; // random pos x
         this.y = this.randomY;  // random pos y
         this.speed = 6; // Geschwindigkeit der Bewegung
-        this.maxY = this.y + 100; // Obergrenze für die Bewegung nach oben
-        this.minY = this.y - 100; // Untergrenze für die Bewegung nach unten
+       // this.maxY = this.y + 100; // Obergrenze für die Bewegung nach oben
+       // this.minY = this.y - 100; // Untergrenze für die Bewegung nach unten
         this.direction = 1; // Richtung der Bewegung: 1 für nach unten, -1 für nach oben
         this.animate();
     };
 
     animate() {
         this.moveInterval = setInterval(() => {
-            this.playAnimation(this.IMAGES_SWIM);
+            if(this.attackDistance()) {
+                this.playAnimation(this.IMAGES_DANGER);
+            } else {
+                this.playAnimation(this.IMAGES_SWIM);
+            }
             if (this.y >= this.maxY) {
                 this.direction = -1; // Ändere die Richtung zu nach oben, wenn die Obergrenze erreicht ist
                 setTimeout(() => {
@@ -65,7 +69,7 @@ class JellyFish extends MoveableObject {
                 this.direction = 1; // Ändere die Richtung zu nach unten, wenn die Untergrenze erreicht ist
             }
             this.y += this.speed * this.direction; // Bewege die Jellyfish entsprechend der Richtung und Geschwindigkeit
-        }, 200);
+    }, 200);
 
 
 
@@ -76,6 +80,7 @@ class JellyFish extends MoveableObject {
         this.speed = 0
         setInterval(() => {
             this.playAnimation(this.IMAGES_DEAD);
+            this.deadAnimation();
         }, 200)
          // Ändern der Animation auf die "Todes"-Animation
     }
@@ -85,6 +90,13 @@ class JellyFish extends MoveableObject {
       setInterval(() => {
             this.x -= this.speed;
         }, 800);
+    }
+
+    deadAnimation(){
+        setInterval(() => {
+            this.x += 5;
+            this.y -= 5;
+        }, 1000 / 60)
     }
 }
 

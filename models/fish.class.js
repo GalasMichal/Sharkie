@@ -2,7 +2,8 @@ class Fish extends MoveableObject {
     height = 80;
     width = 80;
     start_attack = false;
-    moveInterval
+    moveInterval;
+    damageType = 'POISON';
 
 
     IMAGES_SWIM = [
@@ -74,8 +75,16 @@ class Fish extends MoveableObject {
         this.speed = 0
         setInterval(() => {
             this.playAnimation(this.IMAGES_DEAD);
+            this.deadAnimation(); 
         }, 200)
          // Ändern der Animation auf die "Todes"-Animation
+    }
+
+    deadAnimation(){
+        setInterval(() => {
+            this.y -= 5;
+        }, 1000 / 60)
+        
     }
 
 

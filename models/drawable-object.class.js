@@ -50,7 +50,6 @@ class DrawableObject {
   
     loadImages(arr) { // wird hier array geladen der ist z.bs bei character.js definiert
         arr.forEach((path) => {
-
             let img = new Image(); // variable img bekommt ein neues objekt
             img.src = path; // hie wird zu dem string src dazugegeben
             this.imageCache[path] = img;

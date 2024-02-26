@@ -10,7 +10,7 @@ class MoveableObject extends DrawableObject {
     collectedBottles = 0;
     randomX = 220 + Math.random() * 3800;
     randomY = 100 + Math.random() * 300;
-
+    damageType = '';
     COIN_AUDIO = new Audio('audio/coin.mp3');
 
 
@@ -91,12 +91,6 @@ class MoveableObject extends DrawableObject {
     }
 
 
-
-
-
-    moveRight() {
-        console.log('Moving right')
-    }
 
     moveLeft() {
         setInterval(() => {

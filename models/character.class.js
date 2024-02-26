@@ -4,6 +4,7 @@ class Character extends MoveableObject {
     y = 80;
     x = 0;
 
+
     IMAGES_SWIM = [
         'img/1.Sharkie/3.Swim/1.png',
         'img/1.Sharkie/3.Swim/2.png',
@@ -75,12 +76,10 @@ class Character extends MoveableObject {
     ];
 
     IMAGES_HURT_SHOCK = [
-        'img/1.Sharkie/5.Hurt/2.Electric shock/.o1.png',
-        'img/1.Sharkie/5.Hurt/2.Electric shock/.o2.png',
-        'img/1.Sharkie/5.Hurt/2.Electric shock/.o1.png',
-        'img/1.Sharkie/5.Hurt/2.Electric shock/.o2.png',
-        'img/1.Sharkie/5.Hurt/2.Electric shock/.o1.png',
-        'img/1.Sharkie/5.Hurt/2.Electric shock/.o2.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/1.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/2.png',
+        'img/1.Sharkie/5.Hurt/2.Electric shock/3.png',
+
     ];
 
 
@@ -104,9 +103,9 @@ class Character extends MoveableObject {
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/6.png',
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/7.png',
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
-    ]
+    ];
 
-
+    damageType = '';
     world;
     dive_sound = new Audio('audio/dive.mp3');
 
@@ -116,8 +115,9 @@ class Character extends MoveableObject {
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT_POISON);
+        this.loadImages(this.IMAGES_HURT_SHOCK);
         this.loadImages(this.IMAGES_ATTACK_BUBBLE);
-        this.loadImages(this.IMAGES_ATTACK_NO_BUBBLE);  
+        this.loadImages(this.IMAGES_ATTACK_NO_BUBBLE);
         this.animate();
         this.offset = {
             top: 90,
@@ -160,19 +160,19 @@ class Character extends MoveableObject {
                     this.playAnimation(this.IMAGES_ATTACK_BUBBLE);
                     this.world.checkThrowObjects();
                     this.collectedBottles -= 5;
-                    
-                    console.log('verfügbare flaschen :', this.collectedBottles);
-                    
+
+                   
+
                     // Deaktiviere das Schießen für eine bestimmte Zeit
                     this.canShoot = false;
                     setTimeout(() => {
                         this.canShoot = true;
-                    },1000);
+                    }, 1000);
                     this.world.statusBarBottle.setPercentage(this.collectedBottles);
-                }else {
+                } else {
                     this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
                 }
-           }
+            }
 
             this.world.camera_x = -this.x + 30;// hie wird die camera wert x verschiben um das gegenteil von wert x
         }, 1000 / 60);
@@ -184,12 +184,18 @@ class Character extends MoveableObject {
 
             }
             else if (this.isHurt()) {
-                if (this.world.checkCollisions() == this.fish) {
+                if (this.damageType == 'POISON') {
                     this.playAnimation(this.IMAGES_HURT_POISON);
                 }
+                else if (this.damageType == 'SHOCK') {
+                    this.playAnimation(this.IMAGES_HURT_SHOCK);
+                } else {
+                    this.playAnimation(this.IMAGES_HURT_POISON);
+                }
+                
             }
             else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN) {  // || oder operator    
-                //swimm animaion
+                //swimm animation
                 this.playAnimation(this.IMAGES_SWIM);
             } else {
                 this.playAnimation(this.IMAGES_IDLE);
