@@ -52,10 +52,30 @@ class World {
                     let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
                     this.enemyAttacked(indexOfBubble);
                     enemy.changeAnimation();
-
                 }
             });
+
+
         });
+
+
+        this.level.boss.forEach((boss) => {
+            if (this.character.isColliding(boss)) {
+                this.character.hit();
+                this.statusBar.setPercentage(this.character.energy);
+
+            };
+            this.Throwable_Object.forEach((thrownObject) => {
+                if (thrownObject.isColliding(boss)) {
+                    let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
+                    this.enemyAttacked(indexOfBubble);
+                   
+                }
+            });
+
+
+        });
+
 
         this.level.coins.forEach((coin) => {
             if (this.character.isColliding(coin)) {

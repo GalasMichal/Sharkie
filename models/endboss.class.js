@@ -11,6 +11,7 @@ class Endboss extends MoveableObject {
     speedX = 8;
     speedY = 8;
     topPosition = true;
+    energy;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -100,10 +101,14 @@ class Endboss extends MoveableObject {
             else if (this.y == this.bottomPosition && !this.topPosition && this.x == this.StartPoint && this.goBack) {
                 this.moveUp();
             }
+            else if(this.isDead())
+            {
+                this.playAnimation(this.IMAGES_DEAD); 
+            }
         }, 80);
     };
 
-    
+
     moveUp() {
         let goDown = setInterval(() => {
             this.playAnimation(this.IMAGES_SWIM);
