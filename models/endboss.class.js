@@ -2,11 +2,15 @@ class Endboss extends MoveableObject {
 
     height = 350;
     width = 300;
-    y = 0;
+    y = -120;
+    UpperPosition = this.y;
+    bottomPosition = this.y + 200;
     goBack = false;
     endPointX;
     StartPoint;
     speedX = 8;
+    speedY = 8;
+    topPosition = true;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -69,31 +73,69 @@ class Endboss extends MoveableObject {
     }
 
     animate() {
-        let interval = setInterval(() => {
+        let intervalMovementX = setInterval(() => {
             if (this.x > this.endPointX && !this.goBack) {
                 this.otherDirection = false;
                 this.playAnimation(this.IMAGES_ATTACK);
                 this.x -= this.speedX; // Bewegung in Richtung Endpunkt
-                if(this.x <= this.endPointX){
+                if (this.x <= this.endPointX) {
                     this.goBack = true
                     this.x = this.endPointX;
                 }
-            } 
+            }
             else if (this.x >= this.endPointX && this.x < this.StartPoint && this.goBack) {
                 // Rückkehr zur Ausgangsposition
                 this.otherDirection = true;
                 this.playAnimation(this.IMAGES_SWIM);
                 this.x += this.speedX;
-                if(this.x >= this.StartPoint)
-                {
-                    this.x = this.StartPoint
-                    this.goBack = false;
+                if (this.x >= this.StartPoint) {
+                    this.x = this.StartPoint;
+                    this.otherDirection = false;
+                    // clearInterval(intervalMovementX);
                 }
-            } 
-            
+            }
+            else if (this.x == this.StartPoint && this.goBack && this.y <= this.UpperPosition && this.topPosition) {
+                this.moveDown();
+            }
+            else if (this.y == this.bottomPosition && !this.topPosition && this.x == this.StartPoint && this.goBack) {
+                this.moveUp();
+            }
         }, 80);
+    };
+
+    
+    moveUp() {
+        let goDown = setInterval(() => {
+            this.playAnimation(this.IMAGES_SWIM);
+            this.y -= this.speedY;
+            if (this.y <= this.UpperPosition) {
+                this.y = this.UpperPosition;
+                this.goBack = false;
+                this.topPosition = true;
+                clearInterval(goDown);
+            };
+        }, 500)
     }
+
+    moveDown() {
+        if (this.y < this.bottomPosition) {
+            let goDown = setInterval(() => {
+                this.playAnimation(this.IMAGES_SWIM);
+                this.y += this.speedY;
+                if (this.y >= this.bottomPosition) {
+                    this.y = this.bottomPosition;
+                    clearInterval(goDown);
+                    this.goBack = false;
+                    this.topPosition = false;
+                    // this.animate();
+                }
+            }, 500);
+        }
+
+    }
+
 }
+
 
 
 
