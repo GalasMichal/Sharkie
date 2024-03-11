@@ -8,7 +8,7 @@ class MoveableObject extends DrawableObject {
     lastHit = 0;
     collectedCoins = 0;
     collectedBottles = 0;
-    randomX = 220 + Math.random() * 3800;
+    randomX = 420 + Math.random() * 3800;
     randomY = 100 + Math.random() * 300;
     damageType = '';
     COIN_AUDIO = new Audio('audio/coin.mp3');

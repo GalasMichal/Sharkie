@@ -32,7 +32,7 @@ class Bottle extends MoveableObject {
         this.loadImages(this.IMAGES);
         this.animate();
         this.y = this.randomY;
-        this.x = this.randomX;
+        this.x = this.randomX - 250;
 
     }
 
