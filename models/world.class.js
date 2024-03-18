@@ -9,7 +9,9 @@ class World {
     statusBar = new StatusBar();
     statusBarCoin = new StatusBarCoin();
     statusBarBottle = new StatusBarBottle();
+    statusBarBoss = new StatusBarBoss();
     Throwable_Object = [];
+    
 
 
 
@@ -59,17 +61,19 @@ class World {
         });
 
 
-        this.level.boss.forEach((boss) => {
-            if (this.character.isColliding(boss)) {
+        this.level.boss.forEach((endBoss) => {
+            if (this.character.isColliding(endBoss)) {
                 this.character.hit();
                 this.statusBar.setPercentage(this.character.energy);
 
             };
             this.Throwable_Object.forEach((thrownObject) => {
-                if (thrownObject.isColliding(boss)) {
+                if (thrownObject.isColliding(endBoss)) {
                     let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
                     this.enemyAttacked(indexOfBubble);
-                   
+                    endBoss.hit();
+                    this.statusBarBoss.setPercentage(endBoss.energy);
+                    console.log('Boss energy is', endBoss.energy)
                 }
             });
 
@@ -114,6 +118,8 @@ class World {
         this.addToMap(this.statusBar);
         this.addToMap(this.statusBarCoin);
         this.addToMap(this.statusBarBottle);
+        if(this.character.x >= 3500){
+        this.addToMap(this.statusBarBoss);}
         this.ctx.translate(this.camera_x, 0);
 
         this.addObjectsToMap(this.level.corals);

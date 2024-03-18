@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sharkie</title>
+    <link rel="icon" type="image/x-icon" href="./img/4. Marcadores/1. Coins/1.png">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="fonts.css">
     <script src="models/drawable-object.class.js"></script>
     <script src="models/status-bar.class.js"></script>
     <script src="models/status-bar-coin.class.js"></script>
     <script src="models/status-bar-bottle.class.js"></script>
-    
+    <script src="models/status-bar-boss.class.js"></script>
     <script src="models/moveable-object.class.js"></script>
     <script src="models/character.class.js"></script>
     <script src="models/coin.class.js"></script>
@@ -26,16 +29,19 @@
     <script src="levels/level1.js"></script>
     <script src="js/game.js"></script>
 </head>
-<body onload="init()">
+
+<body onload="mainMenu()">
 
     <div class="logo"><img src="img/7.Backgrounds/sharkie.png" alt="" srcset=""></div>
 
+    <div id="game_content" class="main-content">
+        
 
-    <canvas id="canvas" width="720" height="480">
+           
+        
 
-
-    </canvas>
-
-
+    </div>
 </body>
+<a href="https://www.flaticon.com/de/kostenlose-icons/klang" title="klang Icons">Klang Icons erstellt von Smashicons - Flaticon</a>
+<a href="https://www.flaticon.com/de/kostenlose-icons/frage" title="frage Icons">Frage Icons erstellt von Freepik - Flaticon</a>
 </html>

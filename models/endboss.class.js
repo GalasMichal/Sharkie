@@ -11,7 +11,8 @@ class Endboss extends MoveableObject {
     speedX = 8;
     speedY = 8;
     topPosition = true;
-    energy;
+    playOnce = true;
+    energy = 100;
 
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
@@ -57,6 +58,13 @@ class Endboss extends MoveableObject {
         'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 8.png',
         'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 9.png',
         'img/2.Enemy/3 Final Enemy/Dead/Mesa de trabajo 2 copia 10.png',
+    ];
+
+    IMAGES_HURT = [
+        'img/2.Enemy/3 Final Enemy/Hurt/1.png',
+        'img/2.Enemy/3 Final Enemy/Hurt/2.png',
+        'img/2.Enemy/3 Final Enemy/Hurt/3.png',
+        'img/2.Enemy/3 Final Enemy/Hurt/4.png',
     ]
 
 
@@ -67,50 +75,79 @@ class Endboss extends MoveableObject {
         this.loadImages(this.IMAGES_ATTACK);
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_DEAD);
-        this.x = 600 //4600 ;
+        this.loadImages(this.IMAGES_HURT);
+        this.x = 4600;
         this.StartPoint = this.x;
         this.endPointX = this.StartPoint - 500;
         this.animate();
     }
 
     animate() {
+
         let intervalMovementX = setInterval(() => {
-            if (this.x > this.endPointX && !this.goBack) {
+           
+            if (this.x > this.endPointX && !this.goBack && this.playOnce) {
                 this.otherDirection = false;
-                this.playAnimation(this.IMAGES_ATTACK);
                 this.x -= this.speedX; // Bewegung in Richtung Endpunkt
+                this.playAnimation(this.IMAGES_ATTACK);
                 if (this.x <= this.endPointX) {
                     this.goBack = true
                     this.x = this.endPointX;
+                    this.playOnce = false;
                 }
+
             }
             else if (this.x >= this.endPointX && this.x < this.StartPoint && this.goBack) {
                 // Rückkehr zur Ausgangsposition
                 this.otherDirection = true;
-                this.playAnimation(this.IMAGES_SWIM);
+
                 this.x += this.speedX;
+                this.playAnimation(this.IMAGES_SWIM);
                 if (this.x >= this.StartPoint) {
                     this.x = this.StartPoint;
+                    this.playOnce = true;
                     this.otherDirection = false;
                     // clearInterval(intervalMovementX);
                 }
             }
             else if (this.x == this.StartPoint && this.goBack && this.y <= this.UpperPosition && this.topPosition) {
                 this.moveDown();
+                if (this.y == this.bottomPosition) {
+
+                    this.playOnce = true;
+                }
             }
             else if (this.y == this.bottomPosition && !this.topPosition && this.x == this.StartPoint && this.goBack) {
                 this.moveUp();
             }
-            else if(this.isDead())
-            {
-                this.playAnimation(this.IMAGES_DEAD); 
-            }
+
         }, 80);
+
+        setInterval(() => {
+            if (this.isDead()) {
+                clearInterval(this.goDown);
+                clearInterval(intervalMovementX);
+                if(this.firstTimeDead)
+                {this.deadAnimation();
+                this.firstTimeDead = false;}
+            }
+            else if (this.isHurt()){
+                this.playAnimation(this.IMAGES_HURT);
+            }
+
+        }, 250)
+        
+
     };
+
+    deadAnimation(){
+        setInterval(this.playAnimation(this.IMAGES_DEAD), 100);
+    }
 
 
     moveUp() {
         let goDown = setInterval(() => {
+
             this.playAnimation(this.IMAGES_SWIM);
             this.y -= this.speedY;
             if (this.y <= this.UpperPosition) {
@@ -118,25 +155,23 @@ class Endboss extends MoveableObject {
                 this.goBack = false;
                 this.topPosition = true;
                 clearInterval(goDown);
+                this.playOnce = true;
             };
         }, 500)
     }
 
     moveDown() {
-        if (this.y < this.bottomPosition) {
-            let goDown = setInterval(() => {
-                this.playAnimation(this.IMAGES_SWIM);
-                this.y += this.speedY;
-                if (this.y >= this.bottomPosition) {
-                    this.y = this.bottomPosition;
-                    clearInterval(goDown);
-                    this.goBack = false;
-                    this.topPosition = false;
-                    // this.animate();
-                }
-            }, 500);
-        }
+        let goDown = setInterval(() => {
 
+            this.playAnimation(this.IMAGES_SWIM);
+            this.y += this.speedY;
+            if (this.y >= this.bottomPosition) {
+                this.y = this.bottomPosition;
+                clearInterval(goDown);
+                this.goBack = false;
+                this.topPosition = false;
+            }
+        }, 500);
     }
 
 }

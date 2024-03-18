@@ -11,10 +11,16 @@ class MoveableObject extends DrawableObject {
     randomX = 420 + Math.random() * 3800;
     randomY = 100 + Math.random() * 300;
     damageType = '';
+    firstTimeDead = true;
     COIN_AUDIO = new Audio('audio/coin.mp3');
+    background_audio; //= new Audio('audio/backgroundMusik.mp3')
 
 
-
+    // playMusic() {
+    //     if(character) {
+    //         this.background_audio.play();
+    //     }
+    // }
 
     applyGravity() {
         setInterval(() => {
@@ -61,7 +67,10 @@ class MoveableObject extends DrawableObject {
     }
 
     hit() {
-        this.energy -= 5;
+        if(this instanceof Endboss){
+            this.energy -= 30;
+        } else {
+        this.energy -= 5;}
         if (this.energy < 0) {
             this.energy = 0
         } else {
