@@ -14,6 +14,7 @@ class Endboss extends MoveableObject {
     playOnce = true;
     energy = 100;
 
+
     IMAGES_INTRO = [
         'img/2.Enemy/3 Final Enemy/1.Introduce/1.png',
         'img/2.Enemy/3 Final Enemy/1.Introduce/2.png',
@@ -84,8 +85,21 @@ class Endboss extends MoveableObject {
 
     animate() {
 
+        let BossHurtIntervall = setInterval(() => {
+            if (this.isHurt()) {
+                this.playAnimation(this.IMAGES_HURT);
+            }
+
+            else if (this.isDead() && this.firstTimeDead) {
+                clearInterval(this.goDown);
+                clearInterval(intervalMovementX);
+                this.startDeadCounter();
+                clearInterval(BossHurtIntervall);
+            };
+        }, 600);
+
         let intervalMovementX = setInterval(() => {
-           
+
             if (this.x > this.endPointX && !this.goBack && this.playOnce) {
                 this.otherDirection = false;
                 this.x -= this.speedX; // Bewegung in Richtung Endpunkt
@@ -123,27 +137,11 @@ class Endboss extends MoveableObject {
 
         }, 80);
 
-        setInterval(() => {
-            if (this.isDead()) {
-                clearInterval(this.goDown);
-                clearInterval(intervalMovementX);
-                if(this.firstTimeDead)
-                {this.deadAnimation();
-                this.firstTimeDead = false;}
-            }
-            else if (this.isHurt()){
-                this.playAnimation(this.IMAGES_HURT);
-            }
+       
 
-        }, 250)
-        
 
     };
-
-    deadAnimation(){
-        setInterval(this.playAnimation(this.IMAGES_DEAD), 100);
-    }
-
+    
 
     moveUp() {
         let goDown = setInterval(() => {

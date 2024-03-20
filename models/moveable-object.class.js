@@ -14,7 +14,7 @@ class MoveableObject extends DrawableObject {
     firstTimeDead = true;
     COIN_AUDIO = new Audio('audio/coin.mp3');
     background_audio; //= new Audio('audio/backgroundMusik.mp3')
-
+    deadCounter = 0;
 
     // playMusic() {
     //     if(character) {
@@ -67,10 +67,11 @@ class MoveableObject extends DrawableObject {
     }
 
     hit() {
-        if(this instanceof Endboss){
+        if (this instanceof Endboss) {
             this.energy -= 30;
         } else {
-        this.energy -= 5;}
+            this.energy -= 5;
+        }
         if (this.energy < 0) {
             this.energy = 0
         } else {
@@ -86,7 +87,7 @@ class MoveableObject extends DrawableObject {
         this.collectedBottles += 20;
     }
 
-    
+
 
     isHurt() {
         let timepassed = new Date().getTime() - this.lastHit; // differenz in ms
@@ -97,6 +98,29 @@ class MoveableObject extends DrawableObject {
 
     isDead() {
         return this.energy == 0;
+    }
+
+    startDeadCounter() {
+
+        let deadInterval = setInterval(() => {
+            this.deadCounter++;
+            this.playAnimation(this.IMAGES_DEAD);
+            if (this.deadCounter == this.IMAGES_DEAD.length - 1) {
+                this.firstTimeDead = false;
+                if (this instanceof Character) {
+                    this.loadImage(this.IMAGES_DEAD[11])
+                } else {
+                    this.loadImage(this.IMAGES_DEAD[4]);
+
+                }
+                clearInterval(deadInterval);
+            }
+        }, 100);
+    };
+
+
+    clearAllIntervals() {
+        for (let i = 1; i < 9999; i++) window.clearInterval(i);
     }
 
 

@@ -3,6 +3,7 @@ class World {
     character = new Character();
     level = level1;
     canvas;
+    gameOver = false;
     ctx;
     keyboard;
     camera_x = 0;
@@ -12,6 +13,7 @@ class World {
     statusBarBoss = new StatusBarBoss();
     Throwable_Object = [];
     
+    youWin = false;
 
 
 
@@ -23,6 +25,8 @@ class World {
         this.setWorld();
         this.run();
     }
+
+
 
     run() {
         setInterval(() => {

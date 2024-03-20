@@ -130,7 +130,7 @@ class Character extends MoveableObject {
 
     animate() {
 
-        setInterval(() => {
+        let moveAround = setInterval(() => {
             this.dive_sound.pause();
             if (this.world && this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.x += this.speed;
@@ -161,7 +161,7 @@ class Character extends MoveableObject {
                     this.world.checkThrowObjects();
                     this.collectedBottles -= 5;
 
-                   
+
 
                     // Deaktiviere das Schießen für eine bestimmte Zeit
                     this.canShoot = false;
@@ -178,11 +178,14 @@ class Character extends MoveableObject {
         }, 1000 / 60);
 
 
-        setInterval(() => {
-            if (this.isDead()) {
-                this.playAnimation(this.IMAGES_DEAD);
-
+        let lastIntervall = setInterval(() => {
+            if (this.isDead() && this.firstTimeDead) {
+                clearInterval(moveAround);
+                this.startDeadCounter();
+                clearInterval(lastIntervall);
+                this.gameIsOver();
             }
+
             else if (this.isHurt()) {
                 if (this.damageType == 'POISON') {
                     this.playAnimation(this.IMAGES_HURT_POISON);
@@ -192,9 +195,9 @@ class Character extends MoveableObject {
                 } else {
                     this.playAnimation(this.IMAGES_HURT_POISON);
                 }
-                
+
             }
-            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN) {  // || oder operator    
+            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN && !this.isDead) {  // || oder operator    
                 //swimm animation
                 this.playAnimation(this.IMAGES_SWIM);
             } else {
@@ -202,6 +205,11 @@ class Character extends MoveableObject {
             }
         }, 250);
 
+    }
+
+    gameIsOver() {
+       this.clearAllIntervals();
+        setTimeout(gameOverScreen, 1000);
     }
 
 
