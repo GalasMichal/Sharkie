@@ -76,60 +76,118 @@ class Endboss extends MoveableObject {
 
     constructor() {
         super().loadImage('img/2.Enemy/3 Final Enemy/2.floating/1.png');
-        this.loadImages(this.IMAGES_INTRO);
-        this.loadImages(this.IMAGES_ATTACK);
-        this.loadImages(this.IMAGES_SWIM);
-        this.loadImages(this.IMAGES_DEAD);
-        this.loadImages(this.IMAGES_HURT);
-        this.x = 4600;
+        this.loadAllImages();
+        this.x = 600//4600;
+        this.loadOffSet();
         this.StartPoint = this.x;
         this.endPointX = this.StartPoint - 500;
         this.animate();
     }
 
+    loadOffSet() {
+        return this.offset = {
+            top: 150,
+            bottom: 60,
+            left: 15,
+            right: 15,
+        };
+    }
+
+    loadAllImages() {
+        this.loadImages(this.IMAGES_INTRO);
+        this.loadImages(this.IMAGES_ATTACK);
+        this.loadImages(this.IMAGES_SWIM);
+        this.loadImages(this.IMAGES_DEAD);
+        this.loadImages(this.IMAGES_HURT);
+    }
+
     animate() {
-        BossHurtIntervall = setInterval(() => this.damage(), 250);
-        intervalMovementX = setInterval(() => {
-            if (this.x > this.endPointX && !this.goBack && this.playOnce) {
-                this.otherDirection = false;
-                this.x -= this.speedX; // Bewegung in Richtung Endpunkt
-                this.playAnimation(this.IMAGES_ATTACK);
-                if (this.x <= this.endPointX) {
-                    this.goBack = true
-                    this.x = this.endPointX;
-                    this.playOnce = false;
-                }
-
-            }
-            else if (this.x >= this.endPointX && this.x < this.StartPoint && this.goBack) {
-                // Rückkehr zur Ausgangsposition
-                this.otherDirection = true;
-
-                this.x += this.speedX;
-                this.playAnimation(this.IMAGES_SWIM);
-                if (this.x >= this.StartPoint) {
-                    this.x = this.StartPoint;
-                    this.playOnce = true;
-                    this.otherDirection = false;
-
-                }
-            }
-            else if (this.x == this.StartPoint && this.goBack && this.y <= this.UpperPosition && this.topPosition) {
-                this.moveDown();
-                if (this.y == this.bottomPosition) {
-                    this.playOnce = true;
-                }
-            }
-            else if (this.y == this.bottomPosition && !this.topPosition && this.x == this.StartPoint && this.goBack) {
-                this.moveUp();
-            }
-
-        }, 90);
-
-
-
-
+        this.BossHurtIntervall = setInterval(() => this.damage(), 50);
+        this.intervalMovementX = setInterval(() => this.bossMovement(), 120);
     };
+
+    bossMovement() {
+        if (this.canMoveForwards())
+            this.attackMovement();
+        else if (this.canMoveBack())
+            this.backwardMovement();
+        else if (this.canMoveDown())
+            this.downwardMovement();
+        else if (this.canMoveUp())
+            this.moveUp();
+    }
+
+    downwardMovement() {
+        this.moveDown();
+        if (this.bottomPositionReached())
+            this.playOnce = true;
+    }
+
+    backwardMovement() {
+        this.moveBack();
+        if (this.startPointReached())
+            this.startPoint();
+    }
+
+    attackMovement() {
+        this.moveForwards();
+        if (this.endPointReached())
+            this.endPoint();
+    }
+
+    canMoveUp() {
+        return this.y == this.bottomPosition && !this.topPosition && this.x == this.StartPoint && this.goBack;
+    }
+
+    bottomPositionReached() {
+        return this.y == this.bottomPosition;
+    }
+
+    canMoveDown() {
+        return this.x == this.StartPoint && this.goBack && this.y <= this.UpperPosition && this.topPosition;
+    }
+
+    startPoint() {
+        this.x = this.StartPoint;
+        this.playOnce = true;
+        this.otherDirection = false;
+    }
+
+    startPointReached() {
+        return this.x >= this.StartPoint;
+    }
+
+    moveBack() {
+        this.otherDirection = true;
+        this.x += this.speedX;
+        this.playAnimation(this.IMAGES_SWIM);
+    }
+
+    canMoveBack() {
+        return this.x >= this.endPointX && this.x < this.StartPoint && this.goBack;
+    }
+
+    endPoint() {
+        this.goBack = true
+        this.x = this.endPointX;
+        this.playOnce = false;
+    }
+
+
+    endPointReached() {
+        return this.x <= this.endPointX;
+    }
+
+    canMoveForwards() {
+        return this.x > this.endPointX && !this.goBack && this.playOnce;
+    }
+
+    moveForwards() {
+        this.otherDirection = false;
+        this.x -= this.speedX;
+        this.playAnimation(this.IMAGES_ATTACK);
+    }
+
 
     damage() {
         if (this.isHurt())
@@ -150,34 +208,39 @@ class Endboss extends MoveableObject {
 
 
     moveUp() {
-        let goUp = setInterval(() => {
-
+        this.goUp = setInterval(() => {
             this.playAnimation(this.IMAGES_SWIM);
             this.y -= this.speedY;
             if (this.y <= this.UpperPosition) {
-                this.y = this.UpperPosition;
-                this.goBack = false;
-                this.topPosition = true;
-                clearInterval(goUp);
-                this.playOnce = true;
+                this.stopUpMovement()
             };
         }, 500)
     }
 
-    moveDown() {
-        let goDown = setInterval(() => {
+    stopUpMovement() {
+        this.y = this.UpperPosition;
+        this.goBack = false;
+        this.topPosition = true;
+        clearInterval(this.goUp);
+        this.playOnce = true;
+    }
 
+    moveDown() {
+        this.goDown = setInterval(() => {
             this.playAnimation(this.IMAGES_SWIM);
             this.y += this.speedY;
             if (this.y >= this.bottomPosition) {
-                this.y = this.bottomPosition;
-                clearInterval(goDown);
-                this.goBack = false;
-                this.topPosition = false;
+              this.stopDownMovement();
             }
         }, 500);
     }
 
+    stopDownMovement(){
+        this.y = this.bottomPosition;
+        clearInterval(this.goDown);
+        this.goBack = false;
+        this.topPosition = false;
+    }
 }
 
 

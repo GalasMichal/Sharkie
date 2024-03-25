@@ -1,6 +1,4 @@
 class Bottle extends MoveableObject {
-
-
     height = 50;
     width = 50;
     offset = {
@@ -9,10 +7,7 @@ class Bottle extends MoveableObject {
         left: 0,
         right: 0,
     }
-
     collectedBottle = 0;
-
-
 
     IMAGES = [
         'img/4. Marcadores/Posión/Animada/1.png',
@@ -41,8 +36,7 @@ class Bottle extends MoveableObject {
             this.playAnimation(this.IMAGES)
         }, 200);
     }
-
-};
+}
     
     
     

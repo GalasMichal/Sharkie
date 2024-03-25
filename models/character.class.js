@@ -109,8 +109,24 @@ class Character extends MoveableObject {
     world;
     dive_sound = new Audio('audio/dive.mp3');
 
-    constructor() { // wenn irgendwo wird aufgerufen new character dann der constructor wird ausgeführt
+    constructor() { 
         super().loadImage('img/1.Sharkie/3.Swim/1.png');
+        this.loadAllImages();
+        this.animate();
+        this.setOffset();
+        this.canShoot = true;
+    }
+
+    setOffset(){
+       return this.offset = {
+            top: 90,
+            bottom: 40,
+            left: 35,
+            right: 35,
+        };
+    }
+
+    loadAllImages() {
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_DEAD);
@@ -118,14 +134,6 @@ class Character extends MoveableObject {
         this.loadImages(this.IMAGES_HURT_SHOCK);
         this.loadImages(this.IMAGES_ATTACK_BUBBLE);
         this.loadImages(this.IMAGES_ATTACK_NO_BUBBLE);
-        this.animate();
-        this.offset = {
-            top: 90,
-            bottom: 40,
-            left: 35,
-            right: 35,
-        };
-        this.canShoot = true;
     }
 
     animate() {
@@ -143,13 +151,16 @@ class Character extends MoveableObject {
             this.moveUp();
         if (this.canMoveDown())
             this.moveDown();
-        if (this.canAttack()) {
-            if (this.collectedBottles > 0)
-                this.attack();
-            else
-                this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
-        }
+        if (this.canAttack())
+            this.startAttack();
         this.world.camera_x = -this.x + 30;
+    }
+
+    startAttack() {
+        if (this.collectedBottles > 0)
+            this.attack();
+        else
+            this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
     }
 
     canMoveRight() {
@@ -232,8 +243,4 @@ class Character extends MoveableObject {
         else
             this.playAnimation(this.IMAGES_IDLE);
     }
-
-
-
-
 }

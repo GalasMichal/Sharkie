@@ -12,9 +12,6 @@ class World {
     statusBarBottle = new StatusBarBottle();
     statusBarBoss = new StatusBarBoss();
     Throwable_Object = [];
-    
-    youWin = false;
-
 
 
     constructor(canvas, keyboard) {
@@ -25,8 +22,6 @@ class World {
         this.setWorld();
         this.run();
     }
-
-
 
     run() {
         setInterval(() => {
@@ -44,68 +39,75 @@ class World {
         this.Throwable_Object.splice(index, 1);
     }
 
-
     checkCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
-                this.character.damageType = enemy.damageType;
-            };
+        this.level.enemies.forEach((enemy) => this.enemyCollision(enemy));
+        this.level.boss.forEach((endBoss) => this.bossCollision(endBoss));
+        this.level.coins.forEach((coin) => this.coinCollision(coin));
+        this.level.bottles.forEach((bottle) => this.bottleCollision(bottle));
+    }
 
-            this.Throwable_Object.forEach((thrownObject) => {
-                if (thrownObject.isColliding(enemy)) {
-                    let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
-                    this.enemyAttacked(indexOfBubble);
-                    enemy.changeAnimation();
-                }
-            });
+    bottleCollision(bottle) {
+        if (this.character.isColliding(bottle)) {
+           this.setBottleStatus(bottle);
+        }
+    }
 
+    setBottleStatus(bottle){
+        this.character.isCollectedBottle();
+        this.statusBarBottle.setPercentage(this.character.collectedBottles);
+        let indexOfBottle = this.level.bottles.indexOf(bottle);
+        this.level.bottles.splice(indexOfBottle, 1);
+    }
 
+    coinCollision(coin) {
+        if (this.character.isColliding(coin))
+            this.setCoinStatus(coin);
+    }
+
+    setCoinStatus(coin) {
+        this.character.isCollected();
+        this.statusBarCoin.setPercentage(this.character.collectedCoins);
+        let indexOfCoin = this.level.coins.indexOf(coin);
+        this.level.coins.splice(indexOfCoin, 1);
+    }
+
+    bossCollision(endBoss) {
+        if (this.character.isColliding(endBoss)) {
+            this.character.hit();
+            this.statusBar.setPercentage(this.character.energy);
+        };
+        this.Throwable_Object.forEach((thrownObject) => this.bossIsColliding(thrownObject, endBoss));
+    }
+
+    bossIsColliding(thrownObject, endBoss) {
+        if (thrownObject.isColliding(endBoss)) {
+            let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
+            this.enemyAttacked(indexOfBubble);
+            endBoss.hit();
+            this.statusBarBoss.setPercentage(endBoss.energy);
+        }
+    }
+
+    enemyCollision(enemy) {
+        if (this.character.isColliding(enemy))
+            this.setCharacterStatus(enemy);
+        this.Throwable_Object.forEach((thrownObject) => {
+            this.enemyIsColliding(thrownObject, enemy);
         });
+    }
 
+    enemyIsColliding(thrownObject, enemy) {
+        if (thrownObject.isColliding(enemy)) {
+            let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
+            this.enemyAttacked(indexOfBubble);
+            enemy.changeAnimation();
+        }
+    }
 
-        this.level.boss.forEach((endBoss) => {
-            if (this.character.isColliding(endBoss)) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
-
-            };
-            this.Throwable_Object.forEach((thrownObject) => {
-                if (thrownObject.isColliding(endBoss)) {
-                    let indexOfBubble = this.Throwable_Object.indexOf(thrownObject);
-                    this.enemyAttacked(indexOfBubble);
-                    endBoss.hit();
-                    this.statusBarBoss.setPercentage(endBoss.energy);
-                    console.log('Boss energy is', endBoss.energy)
-                }
-            });
-
-
-        });
-
-
-        this.level.coins.forEach((coin) => {
-            if (this.character.isColliding(coin)) {
-                this.character.isCollected();
-                this.statusBarCoin.setPercentage(this.character.collectedCoins);
-                let indexOfCoin = this.level.coins.indexOf(coin);
-                this.level.coins.splice(indexOfCoin, 1);
-                // console.log('coin collected', this.character.collectedCoins, 'index of coin is', indexOfCoin);
-            }
-        });
-
-        this.level.bottles.forEach((bottle) => {
-            if (this.character.isColliding(bottle)) {
-                this.character.isCollectedBottle();
-                this.statusBarBottle.setPercentage(this.character.collectedBottles);
-                let indexOfBottle = this.level.bottles.indexOf(bottle);
-                this.level.bottles.splice(indexOfBottle, 1);
-                //  console.log('Bottle collected', this.character.collectedBottles, 'index of bottle is', indexOfBottle);
-            }
-        });
-
-
+    setCharacterStatus(enemy) {
+        this.character.hit();
+        this.statusBar.setPercentage(this.character.energy);
+        this.character.damageType = enemy.damageType;
     }
 
     setWorld() {
@@ -114,32 +116,36 @@ class World {
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
         this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.ctx.translate(-this.camera_x, 0);
-
-        this.addToMap(this.statusBar);
-        this.addToMap(this.statusBarCoin);
-        this.addToMap(this.statusBarBottle);
-        if(this.character.x >= 3500){
-        this.addToMap(this.statusBarBoss);}
+        this.addDrawableObjects();
         this.ctx.translate(this.camera_x, 0);
+        this.addAllObjectsToMap();
+        this.addToMap(this.character);
+        this.ctx.translate(-this.camera_x, 0);
+        let self = this;
+        requestAnimationFrame(function () {
+            self.draw();
+        });
+    }
 
+    addAllObjectsToMap() {
         this.addObjectsToMap(this.level.corals);
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.level.boss);
         this.addObjectsToMap(this.Throwable_Object);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
-        this.addToMap(this.character);
+    }
 
-        this.ctx.translate(-this.camera_x, 0);
-
-        let self = this;
-        requestAnimationFrame(function () {
-            self.draw();
-        });
+    addDrawableObjects() {
+        this.addToMap(this.statusBar);
+        this.addToMap(this.statusBarCoin);
+        this.addToMap(this.statusBarBottle);
+        if (this.character.x >= 3500) {
+            this.addToMap(this.statusBarBoss);
+        }
     }
 
     addObjectsToMap(objects) {
@@ -149,16 +155,11 @@ class World {
     }
 
     addToMap(mo) {
-        if (mo.otherDirection) {
+        if (mo.otherDirection)
             this.flipImage(mo);
-        }
-
         mo.draw(this.ctx);
-        // mo.drawFrame(this.ctx); ENABLE IT IF YOU WANT TO SEE HIT BOX FRAMES
-
-        if (mo.otherDirection) {
+        if (mo.otherDirection)
             this.flipImageBack(mo);
-        }
     }
 
     flipImage(mo) {

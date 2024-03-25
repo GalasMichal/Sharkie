@@ -31,19 +31,27 @@ class Fish extends MoveableObject {
 
     constructor() {
         super().loadImage('img/2.Enemy/1.Puffer fish (3 color options)/1.Swim/3.swim1.png');
-        this.loadImages(this.IMAGES_SWIM);
-        this.loadImages(this.IMAGES_TRANSITION);
-        this.loadImages(this.IMAGES_DEAD);
+        this.loadAllImages();
         this.x = this.randomX;
         this.y = this.randomY;
         this.speed = 0.15 + Math.random() * 0.25; // es gibt uns zuffälige zahl zwischen 0.15 bis 0.25, es heisst für jeden enemy wird unterschiedliche geschwindigkeit ausgegeben
         this.animate();
-        this.offset = {
+        this.setOffSet();
+    }
+
+    setOffSet(){
+        return  this.offset = {
             top: 10,
             bottom: 20,
             left: 5,
             right: 5,
         }
+    }
+
+    loadAllImages(){
+        this.loadImages(this.IMAGES_SWIM);
+        this.loadImages(this.IMAGES_TRANSITION);
+        this.loadImages(this.IMAGES_DEAD);
     }
 
 

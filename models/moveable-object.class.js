@@ -13,23 +13,9 @@ class MoveableObject extends DrawableObject {
     damageType = '';
     firstTimeContact = true;
     COIN_AUDIO = new Audio('audio/coin.mp3');
-    background_audio; //= new Audio('audio/backgroundMusik.mp3')
     deadCounter = 0;
+    deadInterval;
 
-    // playMusic() {
-    //     if(character) {
-    //         this.background_audio.play();
-    //     }
-    // }
-
-    applyGravity() {
-        setInterval(() => {
-            if (this.isAboveGround() || this.speedY > 0) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
-            }
-        }, 1000 / 25);
-    }
 
     attackDistance() {
         if (world) {
@@ -37,9 +23,8 @@ class MoveableObject extends DrawableObject {
         }
     }
 
-
     isAboveGround() {
-        if (this instanceof ThrowableObject) { // Throwable object should always fall
+        if (this instanceof ThrowableObject) { 
             return true;
         } else {
             return this.y < 180;
@@ -49,9 +34,6 @@ class MoveableObject extends DrawableObject {
     moveObject(ctx) {
         ctx.beginPath();
     }
-
-
-
 
     /**
      * check colisions with objects
@@ -101,51 +83,45 @@ class MoveableObject extends DrawableObject {
     }
 
     startDeadCounter() {
-
-        let deadInterval = setInterval(() => {
+        this.deadInterval = setInterval(() => {
             this.deadCounter++;
             this.playAnimation(this.IMAGES_DEAD);
             if (this.deadCounter == this.IMAGES_DEAD.length - 1) {
                 this.firstTimeContact = false;
-                if (this instanceof Character) {
-                    this.loadImage(this.IMAGES_DEAD[11])
-                    clearInterval(deadInterval);
-                    this.clearAllIntervals();
-                    setTimeout(gameOverScreen, 1000);
-                    
-                } else {
-                    this.loadImage(this.IMAGES_DEAD[4]);
-                    clearInterval(deadInterval);
-                    this.clearAllIntervals();
-                    setTimeout(winnerScreen, 2000);
-                    
-                }
-                
+                if (this instanceof Character)
+                    this.characterDeadAnimations();
+                else
+                    this.bossDeadAnimations();
             }
         }, 250);
     };
 
+    bossDeadAnimations() {
+        this.loadImage(this.IMAGES_DEAD[4]);
+        clearInterval(this.deadInterval);
+        this.clearAllIntervals();
+        setTimeout(winnerScreen, 2000);
+    }
+
+    characterDeadAnimations() {
+        this.loadImage(this.IMAGES_DEAD[11])
+        clearInterval(this.deadInterval);
+        this.clearAllIntervals();
+        setTimeout(gameOverScreen, 1000);
+    }
 
     clearAllIntervals() {
         for (let i = 1; i < 9999; i++) window.clearInterval(i);
     }
 
-    // gameIsOver() {
-    //     this.clearAllIntervals();
-    //     setTimeout(gameOverScreen, 1000);
-    // }
-
-
-
     moveLeft() {
         setInterval(() => {
             this.x -= this.speed;
-        }, 1000 / 60);  // berechnung 60 mal pro sekunde werden 0.15 piksel abgezogen    
+        }, 1000 / 60);   
     }
 
     playAnimation(images) {
-        let i = this.currentImage % images.length; // modulu % let i = 0 % 18; = > 0, rest 18 
-        // i = 0, 1, 2, => 17 , dann wieder von 0, 1, 2, unendliche reinfolge
+        let i = this.currentImage % images.length;
         let path = images[i];
         this.img = this.imageCache[path];
         this.currentImage++;

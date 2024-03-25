@@ -3,12 +3,10 @@ class BackgroundObject extends MoveableObject{
     width = 720;
     
     
-
     constructor(imagePath, x){
         super().loadImage(imagePath);
         this.x = x;
-        this.y = 480 - this.height; // hier wird die y achse automatisch berechnet von die canvas grösse
+        this.y = 480 - this.height; 
         
     }
-
 }

@@ -34,7 +34,6 @@ class Coin extends MoveableObject {
             this.playAnimation(this.IMAGES)
         }, 200);
     }
-
-};
+}
 
 
