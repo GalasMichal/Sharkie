@@ -129,88 +129,111 @@ class Character extends MoveableObject {
     }
 
     animate() {
-
-        let moveAround = setInterval(() => {
-            this.dive_sound.pause();
-            if (this.world && this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-                this.x += this.speed;
-                this.otherDirection = false;
-                this.dive_sound.play();
-
-            }
-
-            if (this.world.keyboard.LEFT && this.x > 0) {
-                this.x -= this.speed;
-                this.otherDirection = true;
-                this.dive_sound.play();
-            }
-
-            if (this.world.keyboard.UP && this.y > -90) {
-                this.y -= this.speed;
-                this.dive_sound.play();
-            }
-
-            if (this.world.keyboard.DOWN && this.y < 300) {
-                this.y += this.speed;
-                this.dive_sound.play();
-            }
-
-            if (this.world.keyboard.SPACE && this.canShoot) {
-                if (this.collectedBottles > 0) {
-                    this.playAnimation(this.IMAGES_ATTACK_BUBBLE);
-                    this.world.checkThrowObjects();
-                    this.collectedBottles -= 5;
-
-
-
-                    // Deaktiviere das Schießen für eine bestimmte Zeit
-                    this.canShoot = false;
-                    setTimeout(() => {
-                        this.canShoot = true;
-                    }, 1000);
-                    this.world.statusBarBottle.setPercentage(this.collectedBottles);
-                } else {
-                    this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
-                }
-            }
-
-            this.world.camera_x = -this.x + 30;// hie wird die camera wert x verschiben um das gegenteil von wert x
-        }, 1000 / 60);
-
-
-        let lastIntervall = setInterval(() => {
-            if (this.isDead() && this.firstTimeDead) {
-                clearInterval(moveAround);
-                this.startDeadCounter();
-                clearInterval(lastIntervall);
-                this.gameIsOver();
-            }
-
-            else if (this.isHurt()) {
-                if (this.damageType == 'POISON') {
-                    this.playAnimation(this.IMAGES_HURT_POISON);
-                }
-                else if (this.damageType == 'SHOCK') {
-                    this.playAnimation(this.IMAGES_HURT_SHOCK);
-                } else {
-                    this.playAnimation(this.IMAGES_HURT_POISON);
-                }
-
-            }
-            else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN && !this.isDead) {  // || oder operator    
-                //swimm animation
-                this.playAnimation(this.IMAGES_SWIM);
-            } else {
-                this.playAnimation(this.IMAGES_IDLE);
-            }
-        }, 250);
-
+        let moveAround = setInterval(() => this.moveCharacter(), 1000 / 60);
+        setInterval(() => this.playCharacter(moveAround), 250);
     }
 
-    gameIsOver() {
-       this.clearAllIntervals();
-        setTimeout(gameOverScreen, 1000);
+    moveCharacter() {
+        this.dive_sound.pause();
+        if (this.canMoveRight())
+            this.moveRight();
+        if (this.canMoveLeft())
+            this.moveLeft();
+        if (this.canMoveUp())
+            this.moveUp();
+        if (this.canMoveDown())
+            this.moveDown();
+        if (this.canAttack()) {
+            if (this.collectedBottles > 0)
+                this.attack();
+            else
+                this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
+        }
+        this.world.camera_x = -this.x + 30;
     }
+
+    canMoveRight() {
+        return this.world && this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x;
+    }
+
+    canMoveLeft() {
+        return this.world.keyboard.LEFT && this.x > 0;
+    }
+
+    canMoveUp() {
+        return this.world.keyboard.UP && this.y > -90;
+    }
+
+    canMoveDown() {
+        return this.world.keyboard.DOWN && this.y < 300;
+    }
+
+    canAttack() {
+        return this.world.keyboard.SPACE && this.canShoot;
+    }
+
+    attack() {
+        this.playAnimation(this.IMAGES_ATTACK_BUBBLE);
+        this.world.checkThrowObjects();
+        this.collectedBottles -= 5;
+        this.canShoot = false;
+        setTimeout(() => {
+            this.canShoot = true;
+        }, 1000);
+        this.world.statusBarBottle.setPercentage(this.collectedBottles);
+    }
+
+    moveDown() {
+        this.y += this.speed;
+        this.dive_sound.play();
+    }
+
+    moveRight() {
+        this.x += this.speed;
+        this.otherDirection = false;
+        this.dive_sound.play();
+    }
+
+    moveLeft() {
+        this.x -= this.speed;
+        this.otherDirection = true;
+        this.dive_sound.play();
+    }
+
+    moveUp() {
+        this.y -= this.speed;
+        this.dive_sound.play();
+    }
+
+    hurtAnimations() {
+        if (this.damageType == 'POISON') {
+            this.playAnimation(this.IMAGES_HURT_POISON);
+        }
+        else if (this.damageType == 'SHOCK') {
+            this.playAnimation(this.IMAGES_HURT_SHOCK);
+        } else {
+            this.playAnimation(this.IMAGES_HURT_POISON);
+        }
+    }
+
+    moveDirection() {
+        return this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN;
+    }
+
+    playCharacter(moveAround) {
+        if (this.isDead() && this.firstTimeContact) {
+            clearInterval(moveAround);
+            this.startDeadCounter();
+        }
+        else if (this.isHurt())
+            this.hurtAnimations();
+        else if (this.moveDirection())
+            this.playAnimation(this.IMAGES_SWIM);
+        else
+            this.playAnimation(this.IMAGES_IDLE);
+    }
+
+
 
 
 }

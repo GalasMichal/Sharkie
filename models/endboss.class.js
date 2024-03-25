@@ -13,6 +13,10 @@ class Endboss extends MoveableObject {
     topPosition = true;
     playOnce = true;
     energy = 100;
+    goDown;
+    goUp;
+    intervalMovementX;
+    BossHurtIntervall;
 
 
     IMAGES_INTRO = [
@@ -84,22 +88,8 @@ class Endboss extends MoveableObject {
     }
 
     animate() {
-
-        let BossHurtIntervall = setInterval(() => {
-            if (this.isHurt()) {
-                this.playAnimation(this.IMAGES_HURT);
-            }
-
-            else if (this.isDead() && this.firstTimeDead) {
-                clearInterval(this.goDown);
-                clearInterval(intervalMovementX);
-                this.startDeadCounter();
-                clearInterval(BossHurtIntervall);
-            };
-        }, 600);
-
-        let intervalMovementX = setInterval(() => {
-
+        BossHurtIntervall = setInterval(() => this.damage(), 250);
+        intervalMovementX = setInterval(() => {
             if (this.x > this.endPointX && !this.goBack && this.playOnce) {
                 this.otherDirection = false;
                 this.x -= this.speedX; // Bewegung in Richtung Endpunkt
@@ -121,13 +111,12 @@ class Endboss extends MoveableObject {
                     this.x = this.StartPoint;
                     this.playOnce = true;
                     this.otherDirection = false;
-                    // clearInterval(intervalMovementX);
+
                 }
             }
             else if (this.x == this.StartPoint && this.goBack && this.y <= this.UpperPosition && this.topPosition) {
                 this.moveDown();
                 if (this.y == this.bottomPosition) {
-
                     this.playOnce = true;
                 }
             }
@@ -135,16 +124,33 @@ class Endboss extends MoveableObject {
                 this.moveUp();
             }
 
-        }, 80);
+        }, 90);
 
-       
+
 
 
     };
-    
+
+    damage() {
+        if (this.isHurt())
+            this.playAnimation(this.IMAGES_HURT);
+        else if (this.isDead() && this.firstTimeContact) {
+            this.clearMovementIntervalls();
+            this.startDeadCounter();
+        };
+    }
+
+
+    clearMovementIntervalls() {
+        clearInterval(this.goDown);
+        clearInterval(this.goUp);
+        clearInterval(this.intervalMovementX);
+        clearInterval(this.BossHurtIntervall);
+    }
+
 
     moveUp() {
-        let goDown = setInterval(() => {
+        let goUp = setInterval(() => {
 
             this.playAnimation(this.IMAGES_SWIM);
             this.y -= this.speedY;
@@ -152,7 +158,7 @@ class Endboss extends MoveableObject {
                 this.y = this.UpperPosition;
                 this.goBack = false;
                 this.topPosition = true;
-                clearInterval(goDown);
+                clearInterval(goUp);
                 this.playOnce = true;
             };
         }, 500)

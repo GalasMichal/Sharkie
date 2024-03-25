@@ -42,17 +42,27 @@ function renderMainMenu() {
 };
 
 function gameOverScreen() {
-    
-        let gameEnd = document.getElementById('game_content');
-        
-        gameEnd.innerHTML = `  <div id="gameover">
+
+    let gameEnd = document.getElementById('game_content');
+
+    gameEnd.innerHTML = `  <div id="gameover">
          <img id="over_img" class="heartbeat" src="img/6.Botones/Tittles/Game Over/Recurso 11.png" alt="" srcset="">
         <img id="try_again" class="roll-in-left" src="img/6.Botones/Try again/Recurso 16.png" alt="" srcset="">
         </div>`;
-        document.getElementById('try_again').addEventListener('click', mainMenu);
-        
-    }
+    document.getElementById('try_again').addEventListener('click', mainMenu);
 
+}
+
+function winnerScreen() {
+    let win = document.getElementById('game_content');
+    win.innerHTML = `
+        <div id="winning_screen">
+          <img id="winner" class="winner roll-in-right" src="img/6.Botones/Try again/Recurso 16.png" alt="" srcset="">
+
+        </div>
+        `
+        document.getElementById('winner').addEventListener('click', mainMenu);
+}
 
 
 

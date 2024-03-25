@@ -11,7 +11,7 @@ class MoveableObject extends DrawableObject {
     randomX = 420 + Math.random() * 3800;
     randomY = 100 + Math.random() * 300;
     damageType = '';
-    firstTimeDead = true;
+    firstTimeContact = true;
     COIN_AUDIO = new Audio('audio/coin.mp3');
     background_audio; //= new Audio('audio/backgroundMusik.mp3')
     deadCounter = 0;
@@ -106,22 +106,34 @@ class MoveableObject extends DrawableObject {
             this.deadCounter++;
             this.playAnimation(this.IMAGES_DEAD);
             if (this.deadCounter == this.IMAGES_DEAD.length - 1) {
-                this.firstTimeDead = false;
+                this.firstTimeContact = false;
                 if (this instanceof Character) {
                     this.loadImage(this.IMAGES_DEAD[11])
+                    clearInterval(deadInterval);
+                    this.clearAllIntervals();
+                    setTimeout(gameOverScreen, 1000);
+                    
                 } else {
                     this.loadImage(this.IMAGES_DEAD[4]);
-
+                    clearInterval(deadInterval);
+                    this.clearAllIntervals();
+                    setTimeout(winnerScreen, 2000);
+                    
                 }
-                clearInterval(deadInterval);
+                
             }
-        }, 100);
+        }, 250);
     };
 
 
     clearAllIntervals() {
         for (let i = 1; i < 9999; i++) window.clearInterval(i);
     }
+
+    // gameIsOver() {
+    //     this.clearAllIntervals();
+    //     setTimeout(gameOverScreen, 1000);
+    // }
 
 
 
