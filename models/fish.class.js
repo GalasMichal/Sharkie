@@ -34,13 +34,13 @@ class Fish extends MoveableObject {
         this.loadAllImages();
         this.x = this.randomX;
         this.y = this.randomY;
-        this.speed = 0.15 + Math.random() * 0.25; // es gibt uns zuffälige zahl zwischen 0.15 bis 0.25, es heisst für jeden enemy wird unterschiedliche geschwindigkeit ausgegeben
+        this.speed = 0.15 + Math.random() * 0.25; 
         this.animate();
         this.setOffSet();
     }
 
-    setOffSet(){
-        return  this.offset = {
+    setOffSet() {
+        return this.offset = {
             top: 10,
             bottom: 20,
             left: 5,
@@ -48,7 +48,7 @@ class Fish extends MoveableObject {
         }
     }
 
-    loadAllImages(){
+    loadAllImages() {
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_TRANSITION);
         this.loadImages(this.IMAGES_DEAD);
@@ -56,44 +56,45 @@ class Fish extends MoveableObject {
 
 
     animate() {
-
         this.moveLeft();
-        this.moveInterval = setInterval(() => {
-            if (this.attackDistance()) {
-                this.playAnimation(this.IMAGES_TRANSITION);
-                if (!this.start_attack){
-                    this.speed = 0;
-                setTimeout(() => {
-                    this.speed = 5;
-                    this.start_attack = true;
-                }, 1000);
-            } else {
-                    this.speed = 5;
-                }
+        this.moveInterval = setInterval(() => this.attackMovement(), 200);
+    }
 
-            } else {
-                this.playAnimation(this.IMAGES_SWIM);
-                this.speed = 0.15 + Math.random() * 0.25;
-            }
-        }, 200);
+    attackMovement() {
+        if (this.attackDistance())
+            this.dashAttack();
+        else {
+            this.playAnimation(this.IMAGES_SWIM);
+            this.speed = 0.15 + Math.random() * 0.25;
+        }
+    }
+
+    dashAttack() {
+        this.playAnimation(this.IMAGES_TRANSITION);
+        if (!this.start_attack) {
+            this.speed = 0;
+            setTimeout(() => {
+                this.speed = 5;
+                this.start_attack = true;
+            }, 1000);
+        } else {
+            this.speed = 5;
+        }
     }
 
     changeAnimation() {
-        clearInterval(this.moveInterval); // Stopp der aktuellen Bewegungsanimation
+        clearInterval(this.moveInterval);
         this.speed = 0
         setInterval(() => {
             this.playAnimation(this.IMAGES_DEAD);
-            this.deadAnimation(); 
+            this.deadAnimation();
         }, 200)
-         // Ändern der Animation auf die "Todes"-Animation
     }
 
-    deadAnimation(){
+    deadAnimation() {
         setInterval(() => {
             this.y -= 5;
         }, 1000 / 60)
-        
+
     }
-
-
 }

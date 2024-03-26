@@ -25,14 +25,12 @@ class ThrowableObject extends MoveableObject {
 
     AnimateUpDown() {
         setInterval(() => {
-
             if (this.y >= this.maxY) {
                 this.direction = -1;
             } else if (this.y <= this.minY) {
                 this.direction = 1;
             }
             this.y += this.speed * this.direction;
-
         }, 50)
     }
 

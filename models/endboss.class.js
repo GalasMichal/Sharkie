@@ -77,7 +77,7 @@ class Endboss extends MoveableObject {
     constructor() {
         super().loadImage('img/2.Enemy/3 Final Enemy/2.floating/1.png');
         this.loadAllImages();
-        this.x = 600//4600;
+        this.x = 4600;
         this.loadOffSet();
         this.StartPoint = this.x;
         this.endPointX = this.StartPoint - 500;

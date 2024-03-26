@@ -15,8 +15,8 @@ function init() {
     }
     background_audio.play();
     canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);  // welt wird in init funktion initiert (ubergeben), keyboard auch
-    //console.log('My character is', world.character);
+    world = new World(canvas, keyboard);
+
 }
 
 
@@ -58,17 +58,15 @@ function winnerScreen() {
     win.innerHTML = `
         <div id="winning_screen">
           <img id="winner" class="winner roll-in-right" src="img/6.Botones/Try again/Recurso 16.png" alt="" srcset="">
-
         </div>
         `
-        document.getElementById('winner').addEventListener('click', mainMenu);
+    document.getElementById('winner').addEventListener('click', mainMenu);
 }
 
 
 
 
 function toggleMuteAllHTMLAudio() {
-
     background_audio.pause();
     console.log(background_audio);
     world.character.COIN_AUDIO.muted = true;
@@ -119,7 +117,7 @@ document.addEventListener('keydown', (e) => {
     if (e.keyCode == 32) {
         keyboard.SPACE = true;
     }
-    // console.log(e);
+    
 });
 
 document.addEventListener('keyup', (e) => {
@@ -142,5 +140,5 @@ document.addEventListener('keyup', (e) => {
     if (e.keyCode == 32) {
         keyboard.SPACE = false;
     }
-    // console.log(e);
+    
 });
