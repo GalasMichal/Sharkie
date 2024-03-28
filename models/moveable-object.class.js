@@ -12,7 +12,7 @@ class MoveableObject extends DrawableObject {
     randomY = 100 + Math.random() * 300;
     damageType = '';
     firstTimeContact = true;
-    COIN_AUDIO = new Audio('audio/coin.mp3');
+    
     deadCounter = 0;
     deadInterval;
 
@@ -20,14 +20,6 @@ class MoveableObject extends DrawableObject {
     attackDistance() {
         if (world) {
             return this.x - world.character.x < 400;
-        }
-    }
-
-    isAboveGround() {
-        if (this instanceof ThrowableObject) { 
-            return true;
-        } else {
-            return this.y < 180;
         }
     }
 
@@ -63,7 +55,8 @@ class MoveableObject extends DrawableObject {
 
     isCollected() {
         this.collectedCoins += 20;
-        this.COIN_AUDIO.play();
+        audio.COIN_AUDIO.currentTime = 0;
+        audio.COIN_AUDIO.play();
     }
     isCollectedBottle() {
         this.collectedBottles += 20;

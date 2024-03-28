@@ -107,7 +107,7 @@ class Character extends MoveableObject {
 
     damageType = '';
     world;
-    dive_sound = new Audio('audio/dive.mp3');
+    
 
     constructor() { 
         super().loadImage('img/1.Sharkie/3.Swim/1.png');
@@ -142,7 +142,7 @@ class Character extends MoveableObject {
     }
 
     moveCharacter() {
-        this.dive_sound.pause();
+     audio.dive_sound.pause();
         if (this.canMoveRight())
             this.moveRight();
         if (this.canMoveLeft())
@@ -196,35 +196,36 @@ class Character extends MoveableObject {
 
     moveDown() {
         this.y += this.speed;
-        this.dive_sound.play();
+        audio.dive_sound.play();
     }
 
     moveRight() {
         this.x += this.speed;
         this.otherDirection = false;
-        this.dive_sound.play();
+        audio.dive_sound.play();
     }
 
     moveLeft() {
         this.x -= this.speed;
         this.otherDirection = true;
-        this.dive_sound.play();
+        audio.dive_sound.play();
     }
 
     moveUp() {
         this.y -= this.speed;
-        this.dive_sound.play();
+        audio.dive_sound.play();
     }
 
     hurtAnimations() {
         if (this.damageType == 'POISON') {
+            audio.hurt.play();
             this.playAnimation(this.IMAGES_HURT_POISON);
         }
         else if (this.damageType == 'SHOCK') {
+            audio.schock.play();
             this.playAnimation(this.IMAGES_HURT_SHOCK);
-        } else {
+        } else 
             this.playAnimation(this.IMAGES_HURT_POISON);
-        }
     }
 
     moveDirection() {

@@ -17,6 +17,8 @@ class ThrowableObject extends MoveableObject {
 
 
     throw() {
+        audio.water_attack.currentTime = 0;
+        audio.water_attack.play();
         this.AnimateUpDown();
         setInterval(() => {
             this.x += 10;

@@ -1,9 +1,10 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-let background_audio = new Audio('audio/backgroundMusik.mp3');
 let audio = [];
+let isMuted = false;
 
+playableAudio();
 
 
 
@@ -13,20 +14,27 @@ function init() {
     if (startScreen) {
         startScreen.classList.add('d-none');
     }
-    background_audio.play();
+    audio.background_audio.play();
     canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
 
 }
 
+function playableAudio(){
+    sounds.forEach(soundObj => {
+        audio[soundObj.name] = new Audio(soundObj.file);
+    });
+}
 
-function mainMenu() {
+
+async function mainMenu() {
+    
     let main = document.getElementById('game_content');
     main.innerHTML = '';
     main.innerHTML += renderMainMenu(), `
    `;
     document.getElementById('info').addEventListener('click', info);
-    document.getElementById('sound').addEventListener('click', toggleMuteAllHTMLAudio);
+    document.getElementById('sound').addEventListener('click',  toggleMuteAllAudio);
 }
 
 function renderMainMenu() {
@@ -42,7 +50,8 @@ function renderMainMenu() {
 };
 
 function gameOverScreen() {
-
+    audio.background_audio.pause();
+    audio.game_over.play();
     let gameEnd = document.getElementById('game_content');
 
     gameEnd.innerHTML = `  <div id="gameover">
@@ -54,6 +63,8 @@ function gameOverScreen() {
 }
 
 function winnerScreen() {
+    audio.background_audio.pause();
+    audio.victory.play();
     let win = document.getElementById('game_content');
     win.innerHTML = `
         <div id="winning_screen">
@@ -63,16 +74,21 @@ function winnerScreen() {
     document.getElementById('winner').addEventListener('click', mainMenu);
 }
 
-
-
-
-function toggleMuteAllHTMLAudio() {
-    background_audio.pause();
-    console.log(background_audio);
-    world.character.COIN_AUDIO.muted = true;
-    world.character.dive_sound.muted = true;
-
+function toggleMuteAllAudio() {
+    isMuted = !isMuted; 
+    for (let key in audio) {
+        if (audio.hasOwnProperty(key)) {
+            audio[key].muted = isMuted;
+        }
+    }
+    let imageElement = document.getElementById('sound');
+    if (isMuted) {
+        imageElement.src = 'img/7.Backgrounds/lautsprecher-mute.png';
+    } else {
+        imageElement.src = 'img/7.Backgrounds/lautsprecher (1).png';
+    }
 }
+
 
 function info() {
     let info = document.getElementById('game_content');
@@ -117,7 +133,7 @@ document.addEventListener('keydown', (e) => {
     if (e.keyCode == 32) {
         keyboard.SPACE = true;
     }
-    
+
 });
 
 document.addEventListener('keyup', (e) => {
@@ -140,5 +156,5 @@ document.addEventListener('keyup', (e) => {
     if (e.keyCode == 32) {
         keyboard.SPACE = false;
     }
-    
+
 });

@@ -190,8 +190,10 @@ class Endboss extends MoveableObject {
 
 
     damage() {
-        if (this.isHurt())
+        if (this.isHurt()) {
+            audio.boss_hurt.play()
             this.playAnimation(this.IMAGES_HURT);
+        }
         else if (this.isDead() && this.firstTimeContact) {
             this.clearMovementIntervalls();
             this.startDeadCounter();
@@ -230,12 +232,12 @@ class Endboss extends MoveableObject {
             this.playAnimation(this.IMAGES_SWIM);
             this.y += this.speedY;
             if (this.y >= this.bottomPosition) {
-              this.stopDownMovement();
+                this.stopDownMovement();
             }
         }, 500);
     }
 
-    stopDownMovement(){
+    stopDownMovement() {
         this.y = this.bottomPosition;
         clearInterval(this.goDown);
         this.goBack = false;

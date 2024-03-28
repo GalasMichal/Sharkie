@@ -57,6 +57,8 @@ class World {
         this.statusBarBottle.setPercentage(this.character.collectedBottles);
         let indexOfBottle = this.level.bottles.indexOf(bottle);
         this.level.bottles.splice(indexOfBottle, 1);
+        audio.bottle_collect.currentTime = 0;
+        audio.bottle_collect.play();
     }
 
     coinCollision(coin) {
