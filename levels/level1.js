@@ -114,7 +114,8 @@ level1 = new Level(
         new Bottle(),
 
     ]
-
+    
 
 );
+levelLoaded = true;
 }

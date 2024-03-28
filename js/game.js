@@ -3,24 +3,35 @@ let world;
 let keyboard = new Keyboard();
 let audio = [];
 let isMuted = false;
+let levelLoaded = false;
 
 playableAudio();
 
 
 
 function init() {
-    initLevel();
     const startScreen = document.getElementById('start_screen');
-    if (startScreen) {
+    if (startScreen)
         startScreen.classList.add('d-none');
-    }
-    audio.background_audio.play();
-    canvas = document.getElementById('canvas');
-    world = new World(canvas, keyboard);
+    startloader();
+    initLevel();
+    if (levelLoaded) {
+        audio.background_audio.play();
+        canvas = document.getElementById('canvas');
+        world = new World(canvas, keyboard);
 
+    }
 }
 
-function playableAudio(){
+function startloader() {
+    let loader = document.getElementById('loader');
+    loader.classList.remove('d-none');
+    setTimeout(() => {
+        loader.classList.add('d-none');
+    }, 3000);
+}
+
+function playableAudio() {
     sounds.forEach(soundObj => {
         audio[soundObj.name] = new Audio(soundObj.file);
     });
@@ -28,26 +39,33 @@ function playableAudio(){
 
 
 async function mainMenu() {
-    
     let main = document.getElementById('game_content');
     main.innerHTML = '';
     main.innerHTML += renderMainMenu(), `
    `;
     document.getElementById('info').addEventListener('click', info);
-    document.getElementById('sound').addEventListener('click',  toggleMuteAllAudio);
+    document.getElementById('sound').addEventListener('click', toggleMuteAllAudio);
 }
 
 function renderMainMenu() {
     return `
+   <div id="loader" class="loader d-none"></div>
    <img id="sound" src="./img/7.Backgrounds/lautsprecher (1).png" alt="" srcset="">
    <div id="start_screen" class="start-game">
             <h1>Welcome to the Sharkie world</h1>
             <img onclick="init()" class="hvr-wobble-vertical" src="img/6.Botones/Start/2.png" alt="" srcset="">
             <img id="info" src="./img/7.Backgrounds/information.png" alt="" srcset="">
+            <span id="htP"><<< How to Play</span>
+
         </div>
         <canvas id="canvas" width="720" height="480"></canvas>
    `
 };
+
+function loadingScreen() {
+    let game = document.getElementById('game_content');
+
+}
 
 function gameOverScreen() {
     audio.background_audio.pause();
@@ -75,7 +93,7 @@ function winnerScreen() {
 }
 
 function toggleMuteAllAudio() {
-    isMuted = !isMuted; 
+    isMuted = !isMuted;
     for (let key in audio) {
         if (audio.hasOwnProperty(key)) {
             audio[key].muted = isMuted;
