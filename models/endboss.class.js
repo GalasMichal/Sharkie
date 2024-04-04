@@ -6,10 +6,11 @@ class Endboss extends MoveableObject {
     UpperPosition = this.y;
     bottomPosition = this.y + 200;
     goBack = false;
-    endPointX;
-    StartPoint;
-    speedX = 8;
-    speedY = 8;
+    StartPoint = 600;
+    endPointX = this.StartPoint - 500;
+    
+    speedX = 10;
+    speedY = 10;
     topPosition = true;
     playOnce = true;
     energy = 100;
@@ -18,6 +19,7 @@ class Endboss extends MoveableObject {
     intervalMovementX;
     BossHurtIntervall;
     playAnimationIntervall;
+    x;
 
 
     IMAGES_INTRO = [
@@ -80,9 +82,6 @@ class Endboss extends MoveableObject {
         this.loadAllImages();
         this.x = 600;
         this.loadOffSet();
-        this.StartPoint = this.x;
-        this.endPointX = this.StartPoint - 500;
-
         this.animate();
     }
 
@@ -106,9 +105,9 @@ class Endboss extends MoveableObject {
     animate() {
 
         this.BossHurtIntervall = setInterval(() => this.damage(), 50);
-        this.playAnimationIntervall = setInterval(() => this.bossPlayAnimation(), 20)
+        this.playAnimationIntervall = setInterval(() => this.bossPlayAnimation(), 120)
         this.intervalMovementX = setInterval(() => this.bossMovement(), 120);
-        
+
 
     };
 
@@ -116,13 +115,9 @@ class Endboss extends MoveableObject {
         if (this.attackDistance()) {
             if (this.isHurt())
                 this.playAnimation(this.IMAGES_HURT);
-            else if (this.attackMovement())
+            else if (this.canMoveForwards())
                 this.playAnimation(this.IMAGES_ATTACK);
-            else if (this.backwardMovement())
-                this.playAnimation(this.IMAGES_SWIM);
-            else if (this.downwardMovement())
-                this.playAnimation(this.IMAGES_SWIM);
-            else if (this.moveUp())
+            else if (this.canMoveBack() || this.canMoveDown() || this.canMoveUp())
                 this.playAnimation(this.IMAGES_SWIM);
         }
     }
@@ -153,12 +148,14 @@ class Endboss extends MoveableObject {
 
     attackMovement() {
         this.moveForwards();
-        if (this.endPointReached())
+        if (this.endPointReached()) {
+            console.log(this.endPointReached());
             this.endPoint();
+        }
     }
 
     canMoveUp() {
-        return this.y == this.bottomPosition && !this.topPosition && this.x == this.StartPoint && this.goBack;
+        return this.y == this.bottomPosition && !this.topPosition && this.x == this.StartPoint && !this.goBack && !this.playOnce;
     }
 
     bottomPositionReached() {
@@ -166,13 +163,15 @@ class Endboss extends MoveableObject {
     }
 
     canMoveDown() {
-        return this.x == this.StartPoint && this.goBack && this.y <= this.UpperPosition && this.topPosition;
+        return this.x == this.StartPoint && !this.goBack && this.y <= this.UpperPosition && this.topPosition && !this.playOnce;
     }
 
     startPoint() {
-        this.x = this.StartPoint;
-        this.playOnce = true;
         this.otherDirection = false;
+        this.goBack = false;
+        this.x = this.StartPoint;
+        this.playOnce = false;
+        
     }
 
     startPointReached() {
@@ -185,22 +184,24 @@ class Endboss extends MoveableObject {
     }
 
     canMoveBack() {
-        return this.x >= this.endPointX && this.x < this.StartPoint && this.goBack;
+        return this.x >= this.endPointX && this.x < this.StartPoint && this.goBack && this.playOnce;
     }
 
     endPoint() {
-        this.goBack = true;
         this.x = this.endPointX;
-        this.playOnce = false;
+        this.goBack = true;
+        this.playOnce = true;
+        console.log('variable auf ', this.goBack)
     }
 
 
     endPointReached() {
         return this.x <= this.endPointX;
+
     }
 
     canMoveForwards() {
-        return this.x > this.endPointX && !this.goBack && this.playOnce;
+        return this.x >= this.endPointX && !this.goBack && this.playOnce;
     }
 
     moveForwards() {
@@ -233,15 +234,15 @@ class Endboss extends MoveableObject {
             if (this.y <= this.UpperPosition) {
                 this.stopUpMovement()
             };
-        }, 500)
+        }, 120)
     }
 
     stopUpMovement() {
         this.y = this.UpperPosition;
-        this.goBack = false;
+        
         this.topPosition = true;
-        clearInterval(this.goUp);
         this.playOnce = true;
+        clearInterval(this.goUp);
     }
 
     moveDown() {
@@ -254,13 +255,11 @@ class Endboss extends MoveableObject {
     }
 
     stopDownMovement() {
+
         this.y = this.bottomPosition;
-        clearInterval(this.goDown);
-        this.goBack = false;
+        this.playOnce = true;
+        
         this.topPosition = false;
+        clearInterval(this.goDown);
     }
 }
-
-
-
-
