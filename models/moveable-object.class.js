@@ -12,14 +12,18 @@ class MoveableObject extends DrawableObject {
     randomY = 100 + Math.random() * 300;
     damageType = '';
     firstTimeContact = true;
-    
+
     deadCounter = 0;
     deadInterval;
 
 
     attackDistance() {
         if (world) {
-            return this.x - world.character.x < 400;
+            if (this instanceof Endboss)
+                return this.x - world.character.x <= 1000;
+            else
+                return this.x - world.character.x < 400;
+
         }
     }
 
@@ -65,8 +69,8 @@ class MoveableObject extends DrawableObject {
 
 
     isHurt() {
-        let timepassed = new Date().getTime() - this.lastHit; 
-        timepassed = timepassed / 1000; 
+        let timepassed = new Date().getTime() - this.lastHit;
+        timepassed = timepassed / 1000;
         return timepassed < 1;
     }
 
@@ -92,7 +96,7 @@ class MoveableObject extends DrawableObject {
         this.loadImage(this.IMAGES_DEAD[4]);
         clearInterval(this.deadInterval);
         this.clearAllIntervals();
-        setTimeout(winnerScreen, 2000);
+        setTimeout(winnerScreen, 1000);
     }
 
     characterDeadAnimations() {
@@ -109,7 +113,7 @@ class MoveableObject extends DrawableObject {
     moveLeft() {
         setInterval(() => {
             this.x -= this.speed;
-        }, 1000 / 60);   
+        }, 1000 / 60);
     }
 
     playAnimation(images) {

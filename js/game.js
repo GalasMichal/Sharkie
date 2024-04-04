@@ -49,7 +49,10 @@ async function mainMenu() {
 
 function renderMainMenu() {
     return `
-   <div id="loader" class="loader d-none"></div>
+   <div id="loader" class="d-none">
+   <p>Loading level</p>
+   <div class="loader"></div>
+   </div>
    <img id="sound" src="./img/7.Backgrounds/lautsprecher (1).png" alt="" srcset="">
    <div id="start_screen" class="start-game">
             <h1>Welcome to the Sharkie world</h1>
@@ -61,11 +64,6 @@ function renderMainMenu() {
         <canvas id="canvas" width="720" height="480"></canvas>
    `
 };
-
-function loadingScreen() {
-    let game = document.getElementById('game_content');
-
-}
 
 function gameOverScreen() {
     audio.background_audio.pause();

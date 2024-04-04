@@ -17,6 +17,7 @@ class Endboss extends MoveableObject {
     goUp;
     intervalMovementX;
     BossHurtIntervall;
+    playAnimationIntervall;
 
 
     IMAGES_INTRO = [
@@ -77,10 +78,11 @@ class Endboss extends MoveableObject {
     constructor() {
         super().loadImage('img/2.Enemy/3 Final Enemy/2.floating/1.png');
         this.loadAllImages();
-        this.x = 4600;
+        this.x = 600;
         this.loadOffSet();
         this.StartPoint = this.x;
         this.endPointX = this.StartPoint - 500;
+
         this.animate();
     }
 
@@ -102,9 +104,28 @@ class Endboss extends MoveableObject {
     }
 
     animate() {
+
         this.BossHurtIntervall = setInterval(() => this.damage(), 50);
+        this.playAnimationIntervall = setInterval(() => this.bossPlayAnimation(), 20)
         this.intervalMovementX = setInterval(() => this.bossMovement(), 120);
+        
+
     };
+
+    bossPlayAnimation() {
+        if (this.attackDistance()) {
+            if (this.isHurt())
+                this.playAnimation(this.IMAGES_HURT);
+            else if (this.attackMovement())
+                this.playAnimation(this.IMAGES_ATTACK);
+            else if (this.backwardMovement())
+                this.playAnimation(this.IMAGES_SWIM);
+            else if (this.downwardMovement())
+                this.playAnimation(this.IMAGES_SWIM);
+            else if (this.moveUp())
+                this.playAnimation(this.IMAGES_SWIM);
+        }
+    }
 
     bossMovement() {
         if (this.canMoveForwards())
@@ -115,6 +136,7 @@ class Endboss extends MoveableObject {
             this.downwardMovement();
         else if (this.canMoveUp())
             this.moveUp();
+
     }
 
     downwardMovement() {
@@ -160,7 +182,6 @@ class Endboss extends MoveableObject {
     moveBack() {
         this.otherDirection = true;
         this.x += this.speedX;
-        this.playAnimation(this.IMAGES_SWIM);
     }
 
     canMoveBack() {
@@ -168,7 +189,7 @@ class Endboss extends MoveableObject {
     }
 
     endPoint() {
-        this.goBack = true
+        this.goBack = true;
         this.x = this.endPointX;
         this.playOnce = false;
     }
@@ -185,15 +206,12 @@ class Endboss extends MoveableObject {
     moveForwards() {
         this.otherDirection = false;
         this.x -= this.speedX;
-        this.playAnimation(this.IMAGES_ATTACK);
     }
 
 
     damage() {
-        if (this.isHurt()) {
+        if (this.isHurt())
             audio.boss_hurt.play()
-            this.playAnimation(this.IMAGES_HURT);
-        }
         else if (this.isDead() && this.firstTimeContact) {
             this.clearMovementIntervalls();
             this.startDeadCounter();
@@ -211,7 +229,6 @@ class Endboss extends MoveableObject {
 
     moveUp() {
         this.goUp = setInterval(() => {
-            this.playAnimation(this.IMAGES_SWIM);
             this.y -= this.speedY;
             if (this.y <= this.UpperPosition) {
                 this.stopUpMovement()
@@ -229,7 +246,6 @@ class Endboss extends MoveableObject {
 
     moveDown() {
         this.goDown = setInterval(() => {
-            this.playAnimation(this.IMAGES_SWIM);
             this.y += this.speedY;
             if (this.y >= this.bottomPosition) {
                 this.stopDownMovement();
