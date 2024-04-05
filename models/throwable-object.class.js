@@ -15,16 +15,28 @@ class ThrowableObject extends MoveableObject {
         this.minY = this.y - 30;
     }
 
-
+    /**
+    * Initiates the throwing action.
+    */
     throw() {
         audio.water_attack.currentTime = 0;
         audio.water_attack.play();
         this.AnimateUpDown();
-        setInterval(() => {
-            this.x += 10;
-        }, 30)
+        if (world.character.otherDirection) {
+            setInterval(() => { 
+                this.x -= 10
+            }, 30)
+        }
+        else {
+            setInterval(() => {
+                this.x += 10;
+            }, 30)
+        }
     }
 
+    /**
+    * Animates the object moving up and down.
+    */
     AnimateUpDown() {
         setInterval(() => {
             if (this.y >= this.maxY) {
@@ -35,6 +47,4 @@ class ThrowableObject extends MoveableObject {
             this.y += this.speed * this.direction;
         }, 50)
     }
-
-
 }

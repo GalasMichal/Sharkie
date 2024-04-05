@@ -39,6 +39,10 @@ class Fish extends MoveableObject {
         this.setOffSet();
     }
 
+    /**
+    * Sets the offset for the character.
+    * @returns {Object} An object containing top, bottom, left, and right offsets.
+    */
     setOffSet() {
         return this.offset = {
             top: 10,
@@ -48,18 +52,26 @@ class Fish extends MoveableObject {
         }
     }
 
+    /**
+    * Loads all required images for the character.
+    */
     loadAllImages() {
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_TRANSITION);
         this.loadImages(this.IMAGES_DEAD);
     }
 
-
+    /**
+    * Animates the fish.
+    */
     animate() {
         this.moveLeft();
         this.moveInterval = setInterval(() => this.attackMovement(), 200);
     }
 
+    /**
+    * Handles the movement and actions during an attack.
+    */
     attackMovement() {
         if (this.attackDistance())
             this.dashAttack();
@@ -69,6 +81,9 @@ class Fish extends MoveableObject {
         }
     }
 
+    /**
+    * Initiates a dash attack.
+    */
     dashAttack() {
         this.playAnimation(this.IMAGES_TRANSITION);
         if (!this.start_attack) {
@@ -82,6 +97,9 @@ class Fish extends MoveableObject {
         }
     }
 
+    /**
+    * Changes the fish's animation.
+    */
     changeAnimation() {
         clearInterval(this.moveInterval);
         this.speed = 0
@@ -91,10 +109,12 @@ class Fish extends MoveableObject {
         }, 200)
     }
 
+    /**
+    * Animates the fish's death.
+    */
     deadAnimation() {
         setInterval(() => {
             this.y -= 5;
         }, 1000 / 60)
-
     }
 }

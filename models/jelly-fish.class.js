@@ -71,6 +71,9 @@ class JellyFish extends MoveableObject {
         this.y += this.speed * this.direction;
     }
 
+    /**
+    * Changes the Jelly-fish's animation to the dead state.
+    */
     changeAnimation() {
         clearInterval(this.moveInterval);
         this.speed = 0
@@ -80,10 +83,16 @@ class JellyFish extends MoveableObject {
         }, 200)
     }
 
+    /**
+    * Moves the enemy to the left continuously.
+    */
     moveLeft() {
         setInterval(() => this.x -= this.speed, 800);
     }
 
+    /**
+    * Animates the enemy's death by moving it diagonally.
+    */
     deadAnimation() {
         setInterval(() => {
             this.x += 5;

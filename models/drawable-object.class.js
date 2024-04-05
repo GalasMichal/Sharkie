@@ -15,11 +15,19 @@ class DrawableObject {
 
     }
 
+    /**
+    * Loads an image from the specified path.
+    * @param {string} path - The path to the image.
+    */
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
     }
 
+    /**
+    * Draws the loaded image on the canvas context.
+    * @param {CanvasRenderingContext2D} ctx - The canvas context to draw on.
+    */
     draw(ctx) {
         try {
             ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -29,6 +37,10 @@ class DrawableObject {
         }
     }
 
+    /**
+    * Loads multiple images from an array of paths.
+    * @param {Array<string>} arr - An array containing paths to the images.
+    */
     loadImages(arr) {
         arr.forEach((path) => {
             let img = new Image();

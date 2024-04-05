@@ -107,18 +107,21 @@ class Character extends MoveableObject {
 
     damageType = '';
     world;
-    
 
-    constructor() { 
+
+    constructor() {
         super().loadImage('img/1.Sharkie/3.Swim/1.png');
         this.loadAllImages();
         this.animate();
         this.setOffset();
         this.canShoot = true;
     }
-
-    setOffset(){
-       return this.offset = {
+    /**
+    * Sets the offset for the character.
+    * @returns {Object} An object containing top, bottom, left, and right offsets.
+    */
+    setOffset() {
+        return this.offset = {
             top: 90,
             bottom: 40,
             left: 35,
@@ -126,6 +129,9 @@ class Character extends MoveableObject {
         };
     }
 
+    /**
+     * Loads all required images for the character.
+    */
     loadAllImages() {
         this.loadImages(this.IMAGES_SWIM);
         this.loadImages(this.IMAGES_IDLE);
@@ -136,13 +142,19 @@ class Character extends MoveableObject {
         this.loadImages(this.IMAGES_ATTACK_NO_BUBBLE);
     }
 
+    /**
+    * Animates the character's movements and actions.
+    */
     animate() {
         let moveAround = setInterval(() => this.moveCharacter(), 1000 / 60);
         setInterval(() => this.playCharacter(moveAround), 250);
     }
 
+    /**
+     * Moves the character based on keyboard input.
+     */
     moveCharacter() {
-     audio.dive_sound.pause();
+        audio.dive_sound.pause();
         if (this.canMoveRight())
             this.moveRight();
         if (this.canMoveLeft())
@@ -156,6 +168,9 @@ class Character extends MoveableObject {
         this.world.camera_x = -this.x + 30;
     }
 
+    /**
+     * Starts the attack action of the character.
+     */
     startAttack() {
         if (this.collectedBottles > 0)
             this.attack();
@@ -163,26 +178,49 @@ class Character extends MoveableObject {
             this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
     }
 
+    /**
+    * Checks if the character can move right.
+    * @returns {boolean} True if the character can move right, false otherwise.
+    */
     canMoveRight() {
         return this.world && this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x;
     }
 
+    /**
+    * Checks if the character can move left.
+    * @returns {boolean} True if the character can move left, false otherwise.
+    */
     canMoveLeft() {
         return this.world.keyboard.LEFT && this.x > 0;
     }
 
+    /**
+    * Checks if the character can move up.
+    * @returns {boolean} True if the character can move up, false otherwise.
+    */
     canMoveUp() {
         return this.world.keyboard.UP && this.y > -90;
     }
 
+    /**
+    * Checks if the character can move down.
+    * @returns {boolean} True if the character can move down, false otherwise.
+    */
     canMoveDown() {
         return this.world.keyboard.DOWN && this.y < 300;
     }
 
+    /**
+    * Checks if the character can attack.
+    * @returns {boolean} True if the character can attack, false otherwise.
+    */
     canAttack() {
         return this.world.keyboard.SPACE && this.canShoot;
     }
 
+    /**
+    * Performs the attack action.
+    */
     attack() {
         this.playAnimation(this.IMAGES_ATTACK_BUBBLE);
         this.world.checkThrowObjects();
@@ -194,28 +232,43 @@ class Character extends MoveableObject {
         this.world.statusBarBottle.setPercentage(this.collectedBottles);
     }
 
+    /**
+     * Moves the character downwards.
+    */
     moveDown() {
         this.y += this.speed;
         audio.dive_sound.play();
     }
-
+    
+    /**
+    * Moves the character rightwards.
+    */
     moveRight() {
         this.x += this.speed;
         this.otherDirection = false;
         audio.dive_sound.play();
     }
 
+    /**
+    * Moves the character leftwards.
+    */
     moveLeft() {
         this.x -= this.speed;
         this.otherDirection = true;
         audio.dive_sound.play();
     }
 
+    /**
+    * Moves the character upwards.
+    */
     moveUp() {
         this.y -= this.speed;
         audio.dive_sound.play();
     }
 
+    /**
+    * Plays hurt animations based on the type of damage.
+    */
     hurtAnimations() {
         if (this.damageType == 'POISON') {
             audio.hurt.play();
@@ -224,14 +277,22 @@ class Character extends MoveableObject {
         else if (this.damageType == 'SHOCK') {
             audio.schock.play();
             this.playAnimation(this.IMAGES_HURT_SHOCK);
-        } else 
+        } else
             this.playAnimation(this.IMAGES_HURT_POISON);
     }
 
+    /**
+    * Checks if the character is moving in any direction.
+    * @returns {boolean} True if the character is moving, false otherwise.
+    */
     moveDirection() {
         return this.world.keyboard.RIGHT || this.world.keyboard.LEFT || this.world.keyboard.UP || this.world.keyboard.DOWN;
     }
 
+    /**
+    * Plays character animations based on actions and movements.
+    * @param {number} moveAround - The interval for moving the character.
+    */
     playCharacter(moveAround) {
         if (this.isDead() && this.firstTimeContact) {
             clearInterval(moveAround);

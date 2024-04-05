@@ -28,7 +28,9 @@ class Coin extends MoveableObject {
         this.y = Math.random() * 400;
         
     }
-
+    /**
+    * Animates the character by continuously playing the animation.
+    */
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGES)

@@ -31,6 +31,9 @@ class Bottle extends MoveableObject {
 
     }
 
+    /**
+    * Animates the character by continuously playing the animation.
+    */
     animate() {
         setInterval(() => {
             this.playAnimation(this.IMAGES)
