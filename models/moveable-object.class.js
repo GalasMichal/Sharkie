@@ -70,7 +70,7 @@ class MoveableObject extends DrawableObject {
     * Increments the number of collected bottles.
     */
     isCollectedBottle() {
-        this.collectedBottles += 20;
+        this.collectedBottles += 25;
     }
 
     /**

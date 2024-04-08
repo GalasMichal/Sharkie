@@ -105,6 +105,8 @@ class Character extends MoveableObject {
         'img/1.Sharkie/4.Attack/Bubble trap/op1 (with bubble formation)/8.png',
     ];
 
+    
+
     damageType = '';
     world;
 
@@ -176,7 +178,10 @@ class Character extends MoveableObject {
             this.attack();
         else
             this.playAnimation(this.IMAGES_ATTACK_NO_BUBBLE);
+            this.world.showWarning();
     }
+
+  
 
     /**
     * Checks if the character can move right.
@@ -231,6 +236,8 @@ class Character extends MoveableObject {
         }, 1000);
         this.world.statusBarBottle.setPercentage(this.collectedBottles);
     }
+
+    
 
     /**
      * Moves the character downwards.

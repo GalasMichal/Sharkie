@@ -170,10 +170,8 @@ class Endboss extends MoveableObject {
     */
     attackMovement() {
         this.moveForwards();
-        if (this.endPointReached()) {
-            console.log(this.endPointReached());
+        if (this.endPointReached())
             this.endPoint();
-        }
     }
 
     /**

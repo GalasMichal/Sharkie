@@ -12,6 +12,7 @@ class World {
     statusBarBottle = new StatusBarBottle();
     statusBarBoss = new StatusBarBoss();
     Throwable_Object = [];
+    Warning_Text = [];
 
 
 
@@ -37,13 +38,29 @@ class World {
     * Checks and throws objects based on character direction.
     */
     checkThrowObjects() {
-        let bottle
+        let bottle;
         if (this.character.otherDirection)
             bottle = new ThrowableObject(this.character.x - 40, this.character.y + 90);
         else
             bottle = new ThrowableObject(this.character.x + 150, this.character.y + 90);
         this.Throwable_Object.push(bottle);
-    };
+        this.deleteThrowObjects(bottle);
+    }
+
+    /**
+    * Deletes the given throwable object from the Throwable_Object array after a delay.
+    * @param {Object} bottle - The throwable object to be deleted.
+    */
+    deleteThrowObjects(bottle) {
+        setTimeout(() => {
+            const index = this.Throwable_Object.indexOf(bottle);
+            if (index !== -1)
+                this.Throwable_Object.splice(index, 1);
+        }, 1000);
+    }
+
+
+
 
     /**
     * Removes a thrown object from the world when it attacks an enemy.
@@ -175,6 +192,22 @@ class World {
     }
 
     /**
+    * Displays a warning message if the character has not collected any bottles.
+    * Removes the warning message after a delay.
+    */
+    showWarning() {
+        if (this.character.collectedBottles == 0) {
+            let alert = new StatusText();
+            this.Warning_Text.push(alert);
+            setTimeout(() => {
+                const index = this.Warning_Text.indexOf(alert);
+                if (index !== -1)
+                    this.Warning_Text.splice(index, 1);
+            }, 1000);
+        }
+    }
+
+    /**
     * Draws all objects onto the canvas.
     */
     draw() {
@@ -183,6 +216,7 @@ class World {
         this.addObjectsToMap(this.level.backgroundObjects);
         this.ctx.translate(-this.camera_x, 0);
         this.addDrawableObjects();
+        this.addObjectsToMap(this.Warning_Text);
         this.ctx.translate(this.camera_x, 0);
         this.addAllObjectsToMap();
         this.addToMap(this.character);
@@ -203,6 +237,7 @@ class World {
         this.addObjectsToMap(this.Throwable_Object);
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
+
     }
 
     /**
@@ -249,7 +284,7 @@ class World {
         this.ctx.scale(-1, 1);
         mo.x = mo.x * -1;
     }
-    
+
     /**
     * Restores the image to its original orientation after flipping.
     * @param {Object} mo - The object whose image needs to be restored.
